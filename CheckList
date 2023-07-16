@@ -1,0 +1,32 @@
+End-Effector:					  STLs		IPTs	Gcode
+	- Cube
+
+Elbow:
+	- Marker_Clip					X		 X		 
+	- Clip
+	- Stabilzer
+	- Marker_Cylinder				X		 X		 
+	- Cylinder 						X		 X		 
+	- Rod 							X		 X		 
+
+	- Parallel Frame:
+		- Clamp						X		 X		 
+		- Coupler					X		 X		 
+		- Column					X		 X		 
+
+Shoulder:
+	- Marker_Clip					X		 X		 
+	- Clip
+	- Stabilzer
+	- Marker_Cylinder 				X		 X		 
+	- Cylinder 						X		 X		 
+	- Rod							X		 X		 
+
+	- Parallel Frame:
+		- Clamp						X		 X		 
+		- Coupler					X		 X		 
+		- Column					X		 X		 
+
+Base:
+	- Clip  						X		 X		 
+	- Markers						X		 X		 
