@@ -1,5 +1,6 @@
 import cv2
 import os
+import time
 
 # Constants for ChArUco board
 SQUARE_LENGTH = 0.10
@@ -44,6 +45,8 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
     folder_index = 0
     count = 0
 
+    countdown_start_time = None
+
     print(f"Press 'c' to capture a set of images. Number of images per press: {num_images_per_press}.")
     while True:
         ret, frame = cap.read()
@@ -62,15 +65,40 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
             _, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(corners, ids, gray, BOARD)
             frame_with_markers = cv2.aruco.drawDetectedCornersCharuco(frame_with_markers, charuco_corners, charuco_ids)
             
-            # If all charuco corners are detected, set flag to true            
-            all_corners_detected = False
             if charuco_corners is not None:
                 all_corners_detected = len(charuco_corners) == (BOARD.chessboardCorners.shape[0])
 
-
-        # Display overlay when all corners are detected
         if all_corners_detected:
-            display_overlay(frame_with_markers, "READY TO CAPTURE!")
+            if countdown_start_time is None:
+                countdown_start_time = time.time()
+            
+            elapsed_time = time.time() - countdown_start_time
+            seconds_remaining = 5 - int(elapsed_time)
+
+            if seconds_remaining <= 0:
+                # Capture image automatically
+                current_folder = os.path.join(base_directory, f"set_{folder_index}_auto")
+                if not os.path.exists(current_folder):
+                    os.makedirs(current_folder)
+                
+                for _ in range(num_images_per_press):
+                    ret, frame = cap.read()
+                    if not ret:
+                        break
+                    if resolution != downsample_resolution:
+                        frame = cv2.resize(frame, downsample_resolution)
+                    filename = os.path.join(current_folder, f"image_{count:02}.jpg")
+                    cv2.imwrite(filename, frame)
+                    print(f"Saved {filename}")
+                    count += 1
+                
+                folder_index += 1
+                count = 0
+                countdown_start_time = None  # Reset countdown
+            else:
+                display_overlay(frame_with_markers, f"READY TO CAPTURE! {seconds_remaining}")
+        else:
+            countdown_start_time = None
 
         cv2.imshow('Camera Feed with Markers', frame_with_markers)
 
@@ -80,7 +108,7 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
             if not os.path.exists(current_folder):
                 os.makedirs(current_folder)
             count = 0
-            while count < num_images_per_press:
+            for _ in range(num_images_per_press):
                 ret, frame = cap.read()
                 if not ret:
                     break
@@ -90,7 +118,9 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
                 cv2.imwrite(filename, frame)
                 print(f"Saved {filename}")
                 count += 1
-                folder_index += 1
+
+            folder_index += 1
+            count = 0
         elif key == ord('q'):
             break
 
@@ -98,5 +128,5 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    show_charuco_board(BOARD)
+    #show_charuco_board(BOARD)
     capture_images()
