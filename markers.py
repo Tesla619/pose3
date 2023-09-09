@@ -30,7 +30,7 @@ def generate_white_box(box_size_cm, resolution_ppcm, output_path):
     print("White box generation complete!")
 
 # White box generation settings
-box_size_cm = 5.4 
+box_size_cm = 5 + 0.4
 white_res_ppcm = 37.84  
 output_path = "Markers/white_box.png"
 
@@ -39,7 +39,7 @@ markerSizeStart = 6
 markerSizeEnd = 6
 num_markers = 20
 marker_size_cm = 5
-marker_res_ppcm = 37.8
+marker_res_ppcm = 37.8                  # might need to change worked for the 5cm one for sure
 
 # Generate white box
 generate_white_box(box_size_cm, white_res_ppcm, output_path)
@@ -51,9 +51,9 @@ for i in range(markerSizeEnd+1):
     if i >= markerSizeStart:
         for j in range(num_markers):
             marker_id = j
-            marker_path = f"Markers/Generated_Markers/{i}x{i}_marker_{j}.png"
+            marker_path = f"Markers/Generated_Markers/{i}x{i}_marker_id{j}_{marker_size_cm}cm.png"
             generate_aruco_marker(marker_id, i, marker_size_cm, marker_res_ppcm, marker_path)
-            print(f"Generated {i}x{i}_marker_{j}")
+            print(f"Generated {i}x{i}_marker_id{j}_{marker_size_cm}cm.png")
 
 # Generate box markers
 os.makedirs("Markers/Generated_Box_Markers", exist_ok=True)
@@ -63,7 +63,7 @@ for i in range(markerSizeEnd+1):
         for j in range(num_markers):
             # Load the images
             background = cv2.imread("Markers/white_box.png")
-            marker_path = f"Markers/Generated_Markers/{i}x{i}_marker_{j}.png"
+            marker_path = f"Markers/Generated_Markers/{i}x{i}_marker_id{j}_{marker_size_cm}cm.png"
             overlay = cv2.imread(marker_path)
 
             # Extract the dimensions of the image
@@ -85,6 +85,6 @@ for i in range(markerSizeEnd+1):
                         background[k, v] = overlay[k-y, v-x]
             
             # Save the modified image
-            box_marker_path = f"Markers/Generated_Box_Markers/{i}x{i}_marker_{j}.png"
+            box_marker_path = f"Markers/Generated_Box_Markers/{i}x{i}_marker_id{j}_{marker_size_cm}cm.png"
             cv2.imwrite(box_marker_path, background)
-            print(f"Generated {i}x{i}_box_marker_{j}")
+            print(f"Generated {i}x{i}_box_marker_id{j}_{marker_size_cm}cm.png")
