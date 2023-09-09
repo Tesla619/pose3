@@ -28,6 +28,9 @@ def generate_charuco_board(paper_width, paper_height, fixed_square_size, dpi, ma
     # Save the board image to a file
     cv2.imwrite(output_path + '\\' + output_filename, board_image)
     
+    print(squaresX)
+    print(squaresY)
+    
     # Display the board (optional)
     cv2.imshow(f'Charuco Board - {output_filename}', board_image)
     cv2.waitKey(0)
@@ -37,13 +40,13 @@ def generate_charuco_board(paper_width, paper_height, fixed_square_size, dpi, ma
 dpi = 1000
 
 # A1 paper dimensions in meters, fixed square size, and margin
-generate_charuco_board(0.841, 0.594, 0.10, dpi, 0.02, 'To Print\\A1', 'A1_charuco_board.png')
+# generate_charuco_board(0.841, 0.594, 0.10, dpi, 0.02, 'To Print\\A1', 'A1_charuco_board.png')
 
 # For A2
-generate_charuco_board(0.420, 0.594, 0.10, dpi, 0.02, 'To Print\\A2', 'A2_charuco_board.png')
+# generate_charuco_board(0.420, 0.594, 0.10, dpi, 0.02, 'To Print\\A2', 'A2_charuco_board.png')
 
 # For A3
 generate_charuco_board(0.297, 0.420, 0.09, dpi, 0.02, 'To Print\\A3', 'A3_charuco_board.png')
 
 # For A4
-generate_charuco_board(0.210, 0.297, 0.08, dpi, 0.01, 'To Print\\A4', 'A4_charuco_board.png')
+# generate_charuco_board(0.210, 0.297, 0.08, dpi, 0.01, 'To Print\\A4', 'A4_charuco_board.png')
