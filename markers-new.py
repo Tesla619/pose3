@@ -37,6 +37,7 @@ def generate_A4_sheet_with_markers(box_marker_paths, start_idx, A4_width_cm, A4_
 
     y_coord = start_y
     current_idx = start_idx
+    
     for _ in range(num_markers_vertical):
         x_coord = start_x
         for _ in range(num_markers_horizontal):
@@ -61,12 +62,8 @@ def generate_A4_sheet_with_markers(box_marker_paths, start_idx, A4_width_cm, A4_
     end_id = box_marker_paths[end_idx].split('_id')[1].split('_')[0]
 
     # Constructing the marker name for the text overlay
-    marker_name = f"{markerSizeStart}x{markerSizeStart}_id{start_id}_-_{end_id}"   
-    
-    # Adjusting the font size and thickness
-    fontScale = 0.75  # adjust this value was 0.5
-    thickness = 3    # adjust this value was 2
-    
+    marker_name = f"{markerSizeStart}x{markerSizeStart} Markers ID {start_id} - {end_id}"   
+        
     # Superimposing the name of the markers
     cv2.putText(A4_image, marker_name, (30, A4_height_pixels - 30), cv2.FONT_HERSHEY_SIMPLEX, fontScale, (0, 0, 0), thickness, cv2.LINE_AA)
     
@@ -77,13 +74,21 @@ def generate_A4_sheet_with_markers(box_marker_paths, start_idx, A4_width_cm, A4_
     # Saving the A4 sheet with markers
     cv2.imwrite(output_path, A4_image)
 
+try:
+    markerSize = int(input("Enter marker size (4-7): "))
+    if markerSize < 4 or markerSize > 7:
+        raise ValueError
+except ValueError:
+    print("Invalid input! Please enter a valid marker size between 4 and 7.")
+    exit()
 
 try:
-    marker_size_cm = float(input("Enter the marker size in cm: "))
+    marker_size_cm = float(input("Enter the marker physical size in cm: "))
 except ValueError:
     print("Invalid input! Please enter a valid number.")
     exit()
 
+fontScale, thickness = 1, 2
 box_size_cm = marker_size_cm + 0.4
 margin_cm = 1
 A4_width_cm, A4_height_cm = 21 - 2, 29.7 - 2
@@ -105,27 +110,27 @@ os.makedirs(os.path.join(base_path, "Generated_Markers"), exist_ok=True)
 os.makedirs(os.path.join(base_path, "Generated_Box_Markers"), exist_ok=True)
 generate_white_box(box_size_cm, resolution_ppcm, output_path)
 
-for i in range(markerSizeStart, markerSizeEnd+1):
-    for j in range(num_markers):
-        marker_path = os.path.join(base_path, "Generated_Markers", f"{i}x{i}_marker_id{j}_{marker_size_cm}cm.png")
-        generate_aruco_marker(j, i, marker_size_cm, resolution_ppcm, marker_path)
+#for i in range(markerSizeStart, markerSizeEnd+1):
+for i in range(num_markers):
+    marker_path = os.path.join(base_path, "Generated_Markers", f"{markerSize}x{markerSize}_marker_id{i}_{marker_size_cm}cm.png")
+    generate_aruco_marker(i, markerSize, marker_size_cm, resolution_ppcm, marker_path)
 
-for i in range(markerSizeStart, markerSizeEnd+1):
-    for j in range(num_markers):
-        background = cv2.imread(output_path)
-        marker_path = os.path.join(base_path, "Generated_Markers", f"{i}x{i}_marker_id{j}_{marker_size_cm}cm.png")
-        overlay = cv2.imread(marker_path)
-        y, x = tuple((background.shape[d] - overlay.shape[d]) // 2 for d in range(2))
-        h, w = overlay.shape[:2]
-        background[y:y+h, x:x+w] = overlay
-        box_marker_path = os.path.join(base_path, "Generated_Box_Markers", f"{i}x{i}_marker_id{j}_{marker_size_cm}cm.png")
-        cv2.imwrite(box_marker_path, background)
+#for i in range(markerSizeStart, markerSizeEnd+1):
+for i in range(num_markers):
+    background = cv2.imread(output_path)
+    marker_path = os.path.join(base_path, "Generated_Markers", f"{markerSize}x{markerSize}_marker_id{i}_{marker_size_cm}cm.png")
+    overlay = cv2.imread(marker_path)
+    y, x = tuple((background.shape[d] - overlay.shape[d]) // 2 for d in range(2))
+    h, w = overlay.shape[:2]
+    background[y:y+h, x:x+w] = overlay
+    box_marker_path = os.path.join(base_path, "Generated_Box_Markers", f"{markerSize}x{markerSize}_marker_id{i}_{marker_size_cm}cm.png")
+    cv2.imwrite(box_marker_path, background)
 
 sheet_folder = os.path.join(base_path, f"{marker_size_cm}cm sheets")
 os.makedirs(sheet_folder, exist_ok=True)
 
-box_marker_paths = [os.path.join(base_path, "Generated_Box_Markers", f"{i}x{i}_marker_id{j}_{marker_size_cm}cm.png") 
-                    for i in range(markerSizeStart, markerSizeEnd+1) for j in range(num_markers)]
+box_marker_paths = [os.path.join(base_path, "Generated_Box_Markers", f"{markerSize}x{markerSize}_marker_id{i}_{marker_size_cm}cm.png") 
+                    for i in range(num_markers)]
 
 total_pages = (len(box_marker_paths) + num_markers_horizontal * num_markers_vertical - 1) // (num_markers_horizontal * num_markers_vertical)
 sheet_count = len(box_marker_paths) // (num_markers_horizontal * num_markers_vertical)
