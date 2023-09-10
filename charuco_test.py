@@ -12,7 +12,7 @@ def select_board_config(board_type, dictionary):
         '1': (cv2.aruco.CharucoBoard_create(2, 4, 0.10, 0.080, dictionary), 0.40, 0.080), # physical
         '2': (cv2.aruco.CharucoBoard_create(2, 4, 0.09, 0.072, dictionary), 0.36, 0.072), # generated A3
         '3': (cv2.aruco.CharucoBoard_create(5, 7, 0.04, 0.020, dictionary), 0.28, 0.020), # documentation generated
-        '4': (cv2.aruco.CharucoBoard_create(5, 8, 0.10, 0.080, dictionary), 0.80, 0.080)  # generated A1
+        '4': (cv2.aruco.CharucoBoard_create(8, 5, 0.10, 0.080, dictionary), 0.80, 0.080)  # generated A1
     }
     
     return configs.get(board_type, (None, None, None))
@@ -20,10 +20,13 @@ def select_board_config(board_type, dictionary):
 # ArUco dictionary and parameters
 dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_1000)
 parameters = cv2.aruco.DetectorParameters_create()
-board, board_length, marker_size = select_board_config('4', dictionary)   # CHANGE SET HERE
+board, board_length, marker_size = select_board_config('4', dictionary)                             # CHANGE SET HERE @@@@@@@@@@@@@@@@@@@
+
+# generate_charuco_board(0.841, 0.594, 0.10, dpi, 0.02, 'To Print\\A1', 'A1_charuco_board.png')
+
 
 # Load the image
-image_path = 'Calibration\\Pics\\Test\\7.png'
+image_path = 'Calibration\\Pics\\Test\\8.png'                                                       # CHANGE PIC HERE @@@@@@@@@@@@@@@@@@@
 image = cv2.imread(image_path)
 
 # Load camera matrix and distortion coefficients
@@ -67,7 +70,7 @@ if ret > 0:
     cv2.aruco.drawDetectedCornersCharuco(image, charuco_corners, charuco_ids)
 
     # Check if enough corners are detected for pose estimation
-    if len(charuco_corners) >= 3: #was 4
+    if len(charuco_corners) >= 0: #was 4
         # Define empty variables for rotation and translation vectors
         charuco_rvec, charuco_tvec = np.zeros((3, 1)), np.zeros((3, 1))
         #charuco_rvec, charuco_tvec = np.zeros((1, 3)), np.zeros((1, 3))
@@ -82,7 +85,7 @@ if ret > 0:
         print(retval)
         
         # Draw the axes for the ChArUco board
-        cv2.drawFrameAxes(image, camera_matrix, distortion_coefficients, charuco_rvec, charuco_tvec, board_length)
+        # cv2.drawFrameAxes(image, camera_matrix, distortion_coefficients, charuco_rvec, charuco_tvec, board_length)
     else:
         print(f"Not enough corners detected.")                    
 
