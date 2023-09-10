@@ -1,12 +1,25 @@
 import cv2
 import os
 import time
+import numpy as np
 
 # Constants for ChArUco board
 SQUARE_LENGTH = 0.10
 MARKER_LENGTH = 0.08
 DICT = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_1000)
 BOARD = cv2.aruco.CharucoBoard_create(2, 4, SQUARE_LENGTH, MARKER_LENGTH, DICT)
+
+# Define the camera matrix and distortion coefficients
+cameraMatrix = np.array(
+    [
+        [6.73172250e02, 0.00000000e00, 3.21652381e02],
+        [0.00000000e00, 6.73172250e02, 2.40854103e02],
+        [0.00000000e00, 0.00000000e00, 1.00000000e00],
+    ]
+)
+distCoeffs = np.array(
+    [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
+)
 
 def show_charuco_board(board, width=1280, height=720):
     """Display a Charuco board for visualization."""
@@ -63,10 +76,19 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
         all_corners_detected = False
         if ids is not None:
             _, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(corners, ids, gray, BOARD)
-            frame_with_markers = cv2.aruco.drawDetectedCornersCharuco(frame_with_markers, charuco_corners, charuco_ids)
+            frame_with_markers = cv2.aruco.drawDetectedCornersCharuco(frame_with_markers, charuco_corners, charuco_ids)            
             
             if charuco_corners is not None:
-                all_corners_detected = len(charuco_corners) == (BOARD.chessboardCorners.shape[0])
+                all_corners_detected = len(charuco_corners) == (BOARD.chessboardCorners.shape[0])    
+                
+                if all_corners_detected:        
+                    print("Corners: ", str(charuco_corners))
+                    print("Corners Length:", len(charuco_corners))
+                    print("Corners Board [0]:", BOARD.chessboardCorners.shape[0])
+                    print("Corners Board:", BOARD.chessboardCorners.shape)    
+                    time.sleep(20 * 1000)    
+                
+        #----------------------------------------------------------------------------------------------------        
 
         if all_corners_detected:
             if countdown_start_time is None:

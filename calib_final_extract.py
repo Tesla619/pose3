@@ -23,7 +23,7 @@ def extract_first_image_from_subfolders(base_path="Calibration\\Pics\\Final"):
             if filename.endswith(".jpg") or filename.endswith(".png"):
                 # Take the first image
                 img_path = os.path.join(folder, filename)
-                new_name = os.path.join(base_path, f"image{image_count}.jpg")
+                new_name = os.path.join(base_path, f"image{image_count:02}.jpg")  # Modified here
                 shutil.move(img_path, new_name)
                 image_count += 1
                 break

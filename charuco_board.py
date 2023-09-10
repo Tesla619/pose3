@@ -1,5 +1,6 @@
 import os
 import cv2
+import numpy as np
 import cv2.aruco as aruco
 
 def generate_charuco_board(paper_width, paper_height, fixed_square_size, dpi, margin, output_path, output_filename):
@@ -22,6 +23,28 @@ def generate_charuco_board(paper_width, paper_height, fixed_square_size, dpi, ma
 
     # Generate the Charuco board image
     board_image = board.draw(image_size)
+    
+    # ##-------------------------- Optional: Add Padding --------------------------##    
+    # # Specify the size of the white margin padding (in pixels)
+    # top_margin = 100  # Adjust as needed
+    # bottom_margin = 100  # Adjust as needed
+
+    # # Create a larger canvas with white background (consistent with grayscale)
+    # canvas_size = (image_size[0], image_size[1] + top_margin + bottom_margin)
+    # canvas = np.ones((canvas_size[1], canvas_size[0]), dtype=np.uint8) * 255  # Initialize with white
+
+    # # Calculate the position to paste the Charuco board image in the center
+    # board_position = ((canvas_size[0] - board_image.shape[1]) // 2, top_margin)
+
+    # # Paste the Charuco board image onto the canvas
+    # canvas[top_margin:top_margin + board_image.shape[0], board_position[0]:board_position[0] + board_image.shape[1]] = board_image
+
+    # # Save or display the resulting image
+    # cv2.imwrite(output_path + '\\' + output_filename, canvas)
+    # cv2.imshow('Charuco Board with Padding', canvas)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    # ##-------------------------- Optional: Add Padding --------------------------##
     
     os.makedirs(output_path, exist_ok=True)
     

@@ -30,12 +30,16 @@ def calibrate_camera(filenames):
             cv2.destroyAllWindows()
             
             _, charuco_corners, charuco_ids = cv2.aruco.interpolateCornersCharuco(corners, ids, gray, BOARD)
-            if charuco_corners is not None and charuco_ids is not None and len(charuco_corners) > 3:
+            if charuco_corners is not None and charuco_ids is not None and len(charuco_corners) > 4: # was 3 instead of 2
                 all_charuco_corners.append(charuco_corners)
                 all_charuco_ids.append(charuco_ids)
             else:
                 print(f"Charuco corners not found for {fname} or less than 4 corners detected.")
         else:
+            img_with_aruco = cv2.aruco.drawDetectedMarkers(image.copy(), corners, ids)
+            cv2.imshow(fname, img_with_aruco)  # Using filename as the window title
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
             print(f"Aruco markers not detected in {fname}.")
 
     imsize = gray.shape
