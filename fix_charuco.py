@@ -34,6 +34,7 @@ SQUARES_Y = 7
 
 # Paper sizes in millimeters
 PAPER_SIZES = {
+    "A0": (841, 1189),
     "A1": (594, 841),
     "A2": (420, 594),
     "A3": (297, 420),

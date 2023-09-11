@@ -9,7 +9,7 @@ DICT = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_1000)
 BOARD = cv2.aruco.CharucoBoard_create(5, 7, SQUARE_LENGTH, MARKER_LENGTH, DICT)
 
 def read_filenames_from_directory(directory_path):
-    return glob.glob(f"{directory_path}/*.jpg")
+    return glob.glob(f"{directory_path}/*.png")
 
 def calibrate_camera(filenames):
     all_charuco_corners = []
