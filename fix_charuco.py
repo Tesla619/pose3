@@ -1,25 +1,44 @@
 import cv2
 
-# Define Charuco board parameters
-DPI = 2000
+def generate_charuco_board(width_mm, height_mm, filename):
+    DPI = 600
+    MARGIN = 10  # 1cm margin, converted to mm
+    DICTIONARY = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_1000)
+    
+    # Calculate usable width and height
+    usable_width_mm = width_mm - 2 * MARGIN
+    usable_height_mm = height_mm - 2 * MARGIN
+
+    # Determine maximum square length
+    SQUARE_LENGTH = min(usable_width_mm / SQUARES_X, usable_height_mm / SQUARES_Y)
+    
+    # Set marker length to be 75% of the square length
+    MARKER_LENGTH = 0.75 * SQUARE_LENGTH
+
+    # Generate Charuco board
+    board = cv2.aruco.CharucoBoard_create(
+        SQUARES_X, SQUARES_Y, SQUARE_LENGTH, MARKER_LENGTH, DICTIONARY)
+
+    # Draw the board
+    IMAGE_WIDTH = int(width_mm * (DPI / 25.4))
+    IMAGE_HEIGHT = int(height_mm * (DPI / 25.4))
+    image = board.draw((IMAGE_WIDTH, IMAGE_HEIGHT))
+
+    # Save the generated Charuco board to a file
+    cv2.imwrite(filename, image)
+
+    print(f"Charuco board saved as {filename}, Width: {IMAGE_WIDTH}, Height: {IMAGE_HEIGHT}, SQ: {SQUARE_LENGTH}, ML: {MARKER_LENGTH}")
+
 SQUARES_X = 5
 SQUARES_Y = 7
-SQUARE_LENGTH = 160  # size of the chessboard squares in millimeters
-MARKER_LENGTH = 120  # size of the ArUco markers in millimeters
-DICTIONARY = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_1000)
 
-# Generate Charuco board
-board = cv2.aruco.CharucoBoard_create(
-    SQUARES_X, SQUARES_Y, SQUARE_LENGTH, MARKER_LENGTH, DICTIONARY)
+# Paper sizes in millimeters
+PAPER_SIZES = {
+    "A1": (594, 841),
+    "A2": (420, 594),
+    "A3": (297, 420),
+    "A4": (210, 297)
+}
 
-# Draw the board
-A1_WIDTH = 594  # in millimeters for A1 size paper
-A1_HEIGHT = 841  # in millimeters for A1 size paper
-IMAGE_WIDTH = int(A1_WIDTH * (DPI / 25.4))  # convert to pixels using a typical DPI of 1000
-IMAGE_HEIGHT = int(A1_HEIGHT * (DPI / 25.4))
-image = board.draw((IMAGE_WIDTH, IMAGE_HEIGHT))
-
-# Save the generated Charuco board to a file
-cv2.imwrite("To Print\\A1\\A1_charuco_board.png", image)
-
-print("Charuco board saved as charuco_board_A1.png")
+for paper, dimensions in PAPER_SIZES.items():
+    generate_charuco_board(dimensions[0], dimensions[1], f"To Print\\Fixed\\{paper}\\{paper}_charuco_board_fixed.png")
