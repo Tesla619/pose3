@@ -5,8 +5,8 @@ import websockets
 import socket
 import cv2
 import numpy as np
-import tensorflow as tf
-from object_detection.utils import label_map_util
+# import tensorflow as tf
+# from object_detection.utils import label_map_util
 
 # Load the dictionary and parameters
 dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_100)
@@ -33,14 +33,14 @@ cap = cv2.VideoCapture(0)
 #     [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
 # )
 
-camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
-distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp.txt")
+# camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
+# distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp.txt")
 
 # camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp_OLD.txt")
 # distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp_OLD.txt")
 
-# camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp_first.txt")
-# distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp_first.txt")
+camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp_first.txt")
+distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp_first.txt")
 
 print("Main Camera Matrix:\n", camera_matrix)
 print("\nMain Distortion Coefficients:\n", distortion_coefficients)
@@ -85,91 +85,91 @@ def receive_frames():
                     tvecs[i],
                     marker_size,
                 )
-
-            if ids[i] == 0:  # FOR TESTING
-                # Rotation matrix
-                RVX = (
-                    f"ID{ids[i]}: Rotation Vector X: {rvecs[i][0][0] * (180/np.pi)} degrees"
-                )
-                RVY = (
-                    f"ID{ids[i]}: Rotation Vector Y: {rvecs[i][0][1] * (180/np.pi)} degrees"
-                )
-                RVZ = (
-                    f"ID{ids[i]}: Rotation Vector Z: {rvecs[i][0][2] * (180/np.pi)} degrees"
-                )   
-
-                # Translation matrix
-                TVX = f"ID{ids[i]}: Translation Vector X: {tvecs[i][0][0]} meters"
-                TVY = f"ID{ids[i]}: Translation Vector Y: {tvecs[i][0][1]} meters"
-                TVZ = f"ID{ids[i]}: Translation Vector Z: {tvecs[i][0][2]} meters"
-
-                xdef = 120
-                ydef = 150
-                yoff = 25
-                size = 0.4
-                thick = 1
-
-                cv2.putText(
-                    frame,
-                    RVX,
-                    (xdef, ydef + (0000 * 0) + 0),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    size,
-                    red,
-                    thick,
-                )
                 
-                cv2.putText(
-                    frame,
-                    RVY,    
-                    (xdef, ydef + (yoff * 1) + 0),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    size,
-                    green,
-                    thick,
-                )
+                if ids[i] == 12:  # FOR TESTING
+                    # Rotation matrix
+                    RVX = (
+                        f"ID{ids[i]}: Rotation Vector X: {rvecs[i][0][0] * (180/np.pi)} degrees"
+                    )
+                    RVY = (
+                        f"ID{ids[i]}: Rotation Vector Y: {rvecs[i][0][1] * (180/np.pi)} degrees"
+                    )
+                    RVZ = (
+                        f"ID{ids[i]}: Rotation Vector Z: {rvecs[i][0][2] * (180/np.pi)} degrees"
+                    )   
+
+                    # Translation matrix
+                    TVX = f"ID{ids[i]}: Translation Vector X: {tvecs[i][0][0]} meters"
+                    TVY = f"ID{ids[i]}: Translation Vector Y: {tvecs[i][0][1]} meters"
+                    TVZ = f"ID{ids[i]}: Translation Vector Z: {tvecs[i][0][2]} meters"
+
+                    xdef = 120
+                    ydef = 150
+                    yoff = 25
+                    size = 0.4
+                    thick = 1
+
+                    cv2.putText(
+                        frame,
+                        RVX,
+                        (xdef, ydef + (0000 * 0) + 0),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        size,
+                        red,
+                        thick,
+                    )
                 
-                cv2.putText(
-                    frame,
-                    RVZ,
-                    (xdef, ydef + (yoff * 2) + 0),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    size,
-                    blue,
-                    thick,
-                )
+                    cv2.putText(
+                        frame,
+                        RVY,    
+                        (xdef, ydef + (yoff * 1) + 0),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        size,
+                        green,
+                        thick,
+                    )
+                
+                    cv2.putText(
+                        frame,
+                        RVZ,
+                        (xdef, ydef + (yoff * 2) + 0),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        size,
+                        blue,
+                        thick,
+                    )
 
-                cv2.putText(
-                    frame,
-                    TVX,
-                    (xdef, ydef + (yoff * 3) + 9),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    size,
-                    red,
-                    thick,
-                )
+                    cv2.putText(
+                        frame,
+                        TVX,
+                        (xdef, ydef + (yoff * 3) + 9),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        size,
+                        red,
+                        thick,
+                    )
 
-                cv2.putText(
-                    frame,
-                    TVY,
-                    (xdef, ydef + (yoff * 4) + 9),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    size,
-                    green,
-                    thick,
-                )
+                    cv2.putText(
+                        frame,
+                        TVY,
+                        (xdef, ydef + (yoff * 4) + 9),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        size,
+                        green,
+                        thick,
+                    )
 
-                cv2.putText(
-                    frame,
-                    TVZ,
-                    (xdef, ydef + (yoff * 5) + 9),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    size,
-                    blue,
-                    thick,
-                )
+                    cv2.putText(
+                        frame,
+                        TVZ,
+                        (xdef, ydef + (yoff * 5) + 9),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        size,
+                        blue,
+                        thick,
+                    )
 
-                # cv2.putText(image, f"{label}: {int(score*100)} %", (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
+                    # cv2.putText(image, f"{label}: {int(score*100)} %", (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
                 
         # Display output
         cv2.imshow("Results", frame)
