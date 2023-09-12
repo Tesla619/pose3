@@ -3,19 +3,22 @@ import numpy as np
 import glob
 
 # Constants for ChArUco board
-SQUARE_LENGTH = 0.04
-MARKER_LENGTH = 0.02
+SQUARE_LENGTH = 0.118
+MARKER_LENGTH = 0.088
 DICT = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_1000)
 BOARD = cv2.aruco.CharucoBoard_create(5, 7, SQUARE_LENGTH, MARKER_LENGTH, DICT)
 
 def read_filenames_from_directory(directory_path):
-    return glob.glob(f"{directory_path}/*.png")
+    return glob.glob(f"{directory_path}/*.jpg")
 
 def calibrate_camera(filenames):
     all_charuco_corners = []
     all_charuco_ids = []
+    
+    imsize = None  # Default assignment
+
     for fname in filenames:        
-        image = cv2.imread(fname)        
+        image = cv2.imread(fname)           
         if image is None:
             print(f"Failed to load {fname}")
             continue
@@ -43,8 +46,12 @@ def calibrate_camera(filenames):
             cv2.destroyAllWindows()
             print(f"Aruco markers not detected in {fname}.")
 
-    imsize = gray.shape
-    print(imsize)
+        imsize = gray.shape
+        print(imsize)
+        
+        if imsize is None:
+            raise ValueError("Failed to process any images for calibration.")
+    
     return cv2.aruco.calibrateCameraCharuco(all_charuco_corners, all_charuco_ids, BOARD, imsize, None, None)
 
 if __name__ == '__main__':

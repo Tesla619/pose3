@@ -4,24 +4,24 @@ import time
 import numpy as np
 
 # Constants for ChArUco board
-SQUARE_LENGTH = 0.10
-MARKER_LENGTH = 0.08
+SQUARE_LENGTH = 0.118
+MARKER_LENGTH = 0.088
 DICT = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_1000)
-BOARD = cv2.aruco.CharucoBoard_create(2, 4, SQUARE_LENGTH, MARKER_LENGTH, DICT)
+BOARD = cv2.aruco.CharucoBoard_create(5, 7, SQUARE_LENGTH, MARKER_LENGTH, DICT)
 
 # Define the camera matrix and distortion coefficients
-cameraMatrix = np.array(
-    [
-        [6.73172250e02, 0.00000000e00, 3.21652381e02],
-        [0.00000000e00, 6.73172250e02, 2.40854103e02],
-        [0.00000000e00, 0.00000000e00, 1.00000000e00],
-    ]
-)
-distCoeffs = np.array(
-    [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
-)
+# cameraMatrix = np.array(
+#     [
+#         [6.73172250e02, 0.00000000e00, 3.21652381e02],
+#         [0.00000000e00, 6.73172250e02, 2.40854103e02],
+#         [0.00000000e00, 0.00000000e00, 1.00000000e00],
+#     ]
+# )
+# distCoeffs = np.array(
+#     [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
+# )
 
-def show_charuco_board(board, width=1280, height=720):
+def show_charuco_board(board, width=640, height=480):
     """Display a Charuco board for visualization."""
     # Draw the ChArUco board on a blank image
     board_image = board.draw((width, height))
@@ -42,9 +42,10 @@ def get_next_attempt_folder(base_directory="Calibration\\Pics"):
 
 def display_overlay(frame, message):
     h, w, _ = frame.shape
-    cv2.putText(frame, message, (w//5, h//2), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 255, 0), 5, cv2.LINE_AA)
+    
+    cv2.putText(frame, message, (w//5, h//2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2, cv2.LINE_AA)
 
-def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_resolution=(640, 480)):
+def capture_images(num_images_per_press=5, resolution=(640, 480), downsample_resolution=(640, 480)):
     base_directory = get_next_attempt_folder()
 
     cap = cv2.VideoCapture(0)
@@ -81,12 +82,12 @@ def capture_images(num_images_per_press=5, resolution=(1280, 720), downsample_re
             if charuco_corners is not None:
                 all_corners_detected = len(charuco_corners) == (BOARD.chessboardCorners.shape[0])    
                 
-                if all_corners_detected:        
-                    print("Corners: ", str(charuco_corners))
-                    print("Corners Length:", len(charuco_corners))
-                    print("Corners Board [0]:", BOARD.chessboardCorners.shape[0])
-                    print("Corners Board:", BOARD.chessboardCorners.shape)    
-                    time.sleep(20 * 1000)    
+                # if all_corners_detected:        
+                #     print("Corners: ", str(charuco_corners))
+                #     print("Corners Length:", len(charuco_corners))
+                #     print("Corners Board [0]:", BOARD.chessboardCorners.shape[0])
+                #     print("Corners Board:", BOARD.chessboardCorners.shape)    
+                #     time.sleep(20 * 1000)    
                 
         #----------------------------------------------------------------------------------------------------        
 

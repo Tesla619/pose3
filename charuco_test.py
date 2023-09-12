@@ -9,12 +9,14 @@ import numpy as np
 
 def select_board_config(board_type, dictionary):
     configs = {
-        '1': (cv2.aruco.CharucoBoard_create(2, 4, 0.100, 0.080, dictionary), 0.40, 0.080),   # physical
-        '2': (cv2.aruco.CharucoBoard_create(2, 4, 0.090, 0.072, dictionary), 0.36, 0.072),   # generated A3
-        '3': (cv2.aruco.CharucoBoard_create(5, 7, 0.040, 0.020, dictionary), 0.28, 0.020),   # documentation generated
-        '4': (cv2.aruco.CharucoBoard_create(8, 5, 0.100, 0.080, dictionary), 0.80, 0.080),   # generated A1
-        '5': (cv2.aruco.CharucoBoard_create(5, 7, 0.030, 0.020, dictionary), 0.28, 0.020),   # documentation as per physical
-        '6': (cv2.aruco.CharucoBoard_create(3, 2, 0.095, 0.078, dictionary), 0.297, 0.078)   # A4 printed
+        '1': (cv2.aruco.CharucoBoard_create(2, 4, 0.100, 0.080, dictionary), 0.400, 0.080),   # physical
+        '2': (cv2.aruco.CharucoBoard_create(2, 4, 0.090, 0.072, dictionary), 0.360, 0.072),   # generated A3
+        '3': (cv2.aruco.CharucoBoard_create(5, 7, 0.040, 0.020, dictionary), 0.280, 0.020),   # documentation generated
+        '4': (cv2.aruco.CharucoBoard_create(8, 5, 0.100, 0.080, dictionary), 0.800, 0.080),   # generated A1
+        '5': (cv2.aruco.CharucoBoard_create(5, 7, 0.030, 0.020, dictionary), 0.280, 0.020),   # documentation as per physical
+        '6': (cv2.aruco.CharucoBoard_create(3, 2, 0.095, 0.078, dictionary), 0.297, 0.078),   # A4 printed
+        '7': (cv2.aruco.CharucoBoard_create(5, 7, 0.118, 0.088, dictionary), 0.472, 0.088),   # A1 printed
+        '8': (cv2.aruco.CharucoBoard_create(5, 7, 0.095, 0.078, dictionary), 0.297, 0.078)    # A3 printed
     }
     
     return configs.get(board_type, (None, None, None))
@@ -22,22 +24,33 @@ def select_board_config(board_type, dictionary):
 # ArUco dictionary and parameters
 dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_1000)
 parameters = cv2.aruco.DetectorParameters_create()
-board, board_length, marker_size = select_board_config('6', dictionary)                             # CHANGE SET HERE @@@@@@@@@@@@@@@@@@@
+board, board_length, marker_size = select_board_config('7', dictionary)                             # CHANGE SET HERE @@@@@@@@@@@@@@@@@@@
 
 # Load the image
-image_path = 'Calibration\\Pics\\Test\\12.png'                                                       # CHANGE PIC HERE @@@@@@@@@@@@@@@@@@@
+image_path = 'Calibration\\Pics\\Test\\14.png'                                                       # CHANGE PIC HERE @@@@@@@@@@@@@@@@@@@
 image = cv2.imread(image_path)
 
 # Load camera matrix and distortion coefficients
+# camera_matrix = np.array(
+#     [
+#         [6.73172250e02, 0.00000000e00, 3.21652381e02],
+#         [0.00000000e00, 6.73172250e02, 2.40854103e02],
+#         [0.00000000e00, 0.00000000e00, 1.00000000e00],
+#     ]
+# )
+# distortion_coefficients = np.array(
+#     [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
+# )
+
 camera_matrix = np.array(
     [
-        [6.73172250e02, 0.00000000e00, 3.21652381e02],
-        [0.00000000e00, 6.73172250e02, 2.40854103e02],
-        [0.00000000e00, 0.00000000e00, 1.00000000e00],
+        [2.694405766919114740e+02, 0.000000000000000000e+00, 2.897376062275218942e+02],
+        [0.000000000000000000e+00, 2.774681226947818118e+02, 3.138977002923015220e+02],
+        [0.000000000000000000e+00, 0.000000000000000000e+00, 1.000000000000000000e+00],
     ]
 )
 distortion_coefficients = np.array(
-    [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
+    [3.437874334233495532e-02, -4.649988638389941642e-02, 7.631484604961843651e-03, 1.062100943683648002e-03, 2.177135718490857963e-02]
 )
 
 # Convert image to grayscale for ArUco detection
