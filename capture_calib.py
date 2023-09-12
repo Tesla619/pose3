@@ -100,7 +100,7 @@ def capture_images(num_images_per_press=5, resolution=(640, 480), downsample_res
                 countdown_start_time = time.time()
             
             elapsed_time = time.time() - countdown_start_time
-            seconds_remaining = 5 - int(elapsed_time)
+            seconds_remaining = 1 - int(elapsed_time)
 
             if seconds_remaining <= 0:
                 # Capture image automatically
