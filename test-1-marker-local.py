@@ -21,19 +21,29 @@ blue = (255, 0, 0)
 
 cap = cv2.VideoCapture(0)
 
-
 # Define the camera matrix and distortion coefficients
-camera_matrix = np.array(
-    [
-        [6.73172250e02, 0.00000000e00, 3.21652381e02],
-        [0.00000000e00, 6.73172250e02, 2.40854103e02],
-        [0.00000000e00, 0.00000000e00, 1.00000000e00],
-    ]
-)
-distortion_coefficients = np.array(
-    [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
-)
+# camera_matrix = np.array(
+#     [
+#         [6.73172250e02, 0.00000000e00, 3.21652381e02],
+#         [0.00000000e00, 6.73172250e02, 2.40854103e02],
+#         [0.00000000e00, 0.00000000e00, 1.00000000e00],
+#     ]
+# )
+# distortion_coefficients = np.array(
+#     [-2.87888863e-01, 9.67075352e-02, 1.65928771e-03, -5.19671229e-04, -1.30327183e-02]
+# )
 
+camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
+distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp.txt")
+
+# camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp_OLD.txt")
+# distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp_OLD.txt")
+
+# camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp_first.txt")
+# distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp_first.txt")
+
+print("Main Camera Matrix:\n", camera_matrix)
+print("\nMain Distortion Coefficients:\n", distortion_coefficients)
 
 def receive_frames():
     while True:
