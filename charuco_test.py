@@ -16,7 +16,7 @@ def select_board_config(board_type, dictionary):
         '5': (cv2.aruco.CharucoBoard_create(5, 7, 0.030, 0.020, dictionary), 0.280, 0.020),   # documentation as per physical
         '6': (cv2.aruco.CharucoBoard_create(3, 2, 0.095, 0.078, dictionary), 0.297, 0.078),   # A4 printed
         '7': (cv2.aruco.CharucoBoard_create(5, 7, 0.118, 0.088, dictionary), 0.472, 0.088),   # A1 printed
-        '8': (cv2.aruco.CharucoBoard_create(5, 7, 0.095, 0.078, dictionary), 0.297, 0.078)    # A3 printed
+        '8': (cv2.aruco.CharucoBoard_create(5, 7, 0.057, 0.043, dictionary), 0.228, 0.043)    # A3 printed
     }
     
     return configs.get(board_type, (None, None, None))

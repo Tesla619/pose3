@@ -4,8 +4,12 @@ import time
 import numpy as np
 
 # Constants for ChArUco board
-SQUARE_LENGTH = 0.118
-MARKER_LENGTH = 0.088
+# SQUARE_LENGTH = 0.118     # A1
+# MARKER_LENGTH = 0.088     # A1
+
+SQUARE_LENGTH = 0.057       # A3
+MARKER_LENGTH = 0.043       # A3
+
 DICT = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_1000)
 BOARD = cv2.aruco.CharucoBoard_create(5, 7, SQUARE_LENGTH, MARKER_LENGTH, DICT)
 
