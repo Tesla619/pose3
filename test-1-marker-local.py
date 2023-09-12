@@ -16,7 +16,7 @@ parameters = cv2.aruco.DetectorParameters_create()
 # Rec
 rec_directory = "Calibration\\Rec"
 frame_width, frame_height = 640, 480
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
+fourcc = cv2.VideoWriter_fourcc(*"MJPG")
 
 # Define the size of the markers (in meters)
 marker_size = 0.05
@@ -58,6 +58,11 @@ def receive_frames():
     except OSError as e:
         print(f"Failed to create folder: {new_att_folder}. Error: {e}")    
     
+    # Create a VideoWriter object to save the video
+    video_filename = f"my_video_{next_att_number}.avi"  # Change the filename and format as needed
+    video_path = os.path.join(new_att_folder, video_filename)        
+    video_out = cv2.VideoWriter(video_path, fourcc, 15, (frame_width, frame_height)) # 15 -> 20.0
+        
     while True:
         ret, frame = cap.read()
         
@@ -178,14 +183,12 @@ def receive_frames():
                     # )
 
                     # cv2.putText(image, f"{label}: {int(score*100)} %", (xmin, ymin), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
-                
+        
+        # Update Rec Frame
+        video_out.write(frame)        
+        
         # Display output
         cv2.imshow("Results", frame)
-        
-        # Create a VideoWriter object to save the video
-        video_filename = f"my_video_{next_att_number}.avi"  # Change the filename and format as needed
-        video_path = os.path.join(new_att_folder, video_filename)        
-        video_out = cv2.VideoWriter(video_path, fourcc, 20.0, (frame_width, frame_height))
         
         key = cv2.waitKey(1) & 0xFF
         if key == ord("q"):
