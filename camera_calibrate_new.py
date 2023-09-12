@@ -51,7 +51,7 @@ def calibrate_camera(filenames):
             print(f"Aruco markers not detected in {fname}.")
 
         imsize = gray.shape
-        print(imsize)
+        print(fname)
         
         if imsize is None:
             raise ValueError("Failed to process any images for calibration.")
@@ -60,8 +60,7 @@ def calibrate_camera(filenames):
 
 if __name__ == '__main__':
     image_directory = 'Calibration\\Pics\\Final'
-    filenames = read_filenames_from_directory(image_directory)
-    print(filenames)
+    filenames = read_filenames_from_directory(image_directory)    
     ret, camera_matrix, distortion_coefficients, _, _ = calibrate_camera(filenames)
 
     print("Camera Matrix:\n", camera_matrix)

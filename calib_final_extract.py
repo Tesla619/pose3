@@ -34,4 +34,4 @@ def extract_first_image_from_subfolders(base_path="Calibration\\Pics\\Final"):
     print(f"Processed {image_count} images.")
 
 if __name__ == "__main__":
-    extract_first_image_from_subfolders()
+    extract_first_image_from_subfolders()   
