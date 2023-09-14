@@ -103,13 +103,14 @@ def receive_frames():
                     # Rotation matrix
                     RVX = (
                         f"ID{ids[i]}: Rotation Vector X: {rvecs[i][0][0] * (180/np.pi)} degrees"
+                        #f"ID{ids[i]}: Rotation Vector X: {rvecs[i][0][0]} rads"
                     )
-                    RVY = (
-                        f"ID{ids[i]}: Rotation Vector Y: {rvecs[i][0][1] * (180/np.pi)} degrees"
-                    )
-                    RVZ = (
-                        f"ID{ids[i]}: Rotation Vector Z: {rvecs[i][0][2] * (180/np.pi)} degrees"
-                    )   
+                    # RVY = (
+                    #     f"ID{ids[i]}: Rotation Vector Y: {rvecs[i][0][1] * (180/np.pi)} degrees"
+                    # )
+                    # RVZ = (
+                    #     f"ID{ids[i]}: Rotation Vector Z: {rvecs[i][0][2] * (180/np.pi)} degrees"
+                    # )   
 
                     # Translation matrix
                     # TVX = f"ID{ids[i]}: Translation Vector X: {tvecs[i][0][0]} meters"
@@ -131,27 +132,30 @@ def receive_frames():
                         red,
                         thick,
                     )
-                
-                    cv2.putText(
-                        frame,
-                        RVY,    
-                        (xdef, ydef + (yoff * 1) + 0),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        size,
-                        green,
-                        thick,
-                    )
-                
-                    cv2.putText(
-                        frame,
-                        RVZ,
-                        (xdef, ydef + (yoff * 2) + 0),
-                        cv2.FONT_HERSHEY_SIMPLEX,
-                        size,
-                        blue,
-                        thick,
-                    )
 
+                    # Y Rotation
+                    # cv2.putText( 
+                    #     frame,
+                    #     RVY,    
+                    #     (xdef, ydef + (yoff * 1) + 0),
+                    #     cv2.FONT_HERSHEY_SIMPLEX,
+                    #     size,
+                    #     green,
+                    #     thick,
+                    # )
+                    
+                    # Z Rotation
+                    # cv2.putText(
+                    #     frame,
+                    #     RVZ,
+                    #     (xdef, ydef + (yoff * 2) + 0),
+                    #     cv2.FONT_HERSHEY_SIMPLEX,
+                    #     size,
+                    #     blue,
+                    #     thick,
+                    # )
+
+                    # Translations
                     # cv2.putText(
                     #     frame,
                     #     TVX,
