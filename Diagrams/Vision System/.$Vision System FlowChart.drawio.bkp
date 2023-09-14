@@ -1,0 +1,57 @@
+<mxfile host="Electron" modified="2023-07-18T07:24:00.493Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.6.1 Chrome/112.0.5615.204 Electron/24.6.1 Safari/537.36" etag="Ix_j83yPTv9zhEFfBmeE" version="21.6.1" type="device">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1098" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4lBJOn2JKVq9GB77oufJ-0" target="4lBJOn2JKVq9GB77oufJ-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4lBJOn2JKVq9GB77oufJ-0" value="Start" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="355" y="50" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4lBJOn2JKVq9GB77oufJ-1" target="4lBJOn2JKVq9GB77oufJ-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4lBJOn2JKVq9GB77oufJ-1" value="Generate ArUco Markers" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="230" y="260" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4lBJOn2JKVq9GB77oufJ-2" target="4lBJOn2JKVq9GB77oufJ-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4lBJOn2JKVq9GB77oufJ-2" value="Initialzing Generation Parameters" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="230" y="120" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4lBJOn2JKVq9GB77oufJ-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="260" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4lBJOn2JKVq9GB77oufJ-3" value="Generate White Background" style="rounded=1;whiteSpace=wrap;html=1;fontSize=18;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="230" y="190" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4lBJOn2JKVq9GB77oufJ-6" target="4lBJOn2JKVq9GB77oufJ-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4lBJOn2JKVq9GB77oufJ-6" value="Merge Markers &amp;amp; White Background" style="whiteSpace=wrap;html=1;fontSize=18;rounded=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="230" y="330" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-15" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4lBJOn2JKVq9GB77oufJ-9" target="E8aoPSwC2TfYCV2xYEIS-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4lBJOn2JKVq9GB77oufJ-9" value="Final Markers Generated" style="whiteSpace=wrap;html=1;fontSize=18;rounded=1;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="230" y="400" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="fFQM5VQvCsF1J5gH5Bex-3" value="End" style="rounded=0;whiteSpace=wrap;html=1;fontSize=18;" parent="WIyWlLk6GJQsqaUBKTNV-1" vertex="1">
+          <mxGeometry x="355" y="540" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="E8aoPSwC2TfYCV2xYEIS-1" target="fFQM5VQvCsF1J5gH5Bex-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="E8aoPSwC2TfYCV2xYEIS-1" value="Generated Markers are Saved on Machine" style="whiteSpace=wrap;html=1;fontSize=18;rounded=0;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="230" y="470" width="360" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
