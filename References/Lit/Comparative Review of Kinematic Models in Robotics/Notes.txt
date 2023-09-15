@@ -1,0 +1,37 @@
+A_Simple_and_Systematic_Approach_to_Assigning_DenavitHartenberg_Parameters
+2b37693a-e71c-4a40-8248-ce20ee125ced
+
+Comparative Analysis of the Inverse Kinematics of a 6-DOF Manipulator
+1f204fb5-b153-438a-aee0-d87d4b0f24fc
+
+Conceptual Design and Kinematic Analysis of Humanoid Robot
+ec6bc39d-8bac-4590-ba2c-3c472e8436ae
+
+D-H parameters augmented with dummy frames for serial manipulators containing spatial links
+2002314e-5159-4825-9c01-1ee3e14c0976
+
+Forward_and_Inverse_Kinematics_of_a_Delta_robot_with_CGA5
+63e27994-aff9-4fab-a920-7d0f2d31767c
+
+RobotKinematics-ForwardandInverseKinematics
+05a6d7e5-6873-46bd-bd7a-9f226cc60a01
+
+
+
+**List of Acronyms**:
+- FK: Forward Kinematics
+- IK: Inverse Kinematics
+- DH: Denavit-Hartenberg
+
+**Figures Referenced**:
+1. Figure 6 from Document 5[^5^]: Coordinate frame assignment for a planar manipulator.
+2. Figure 7 from Document 5[^5^]: Positions for a planar manipulator.
+3. Figure 9 from Document 5[^5^]: Coordinate frame and unit line vectors for the Stanford Manipulator.
+
+[^1^]: Document 1, Page 12
+[^2^]: Document 2, Page 8
+[^3^]: Document 3, Page 21
+[^4^]: Document 4, Page 16
+[^5^]: Document 5, Pages 15, 21, 26
+
+

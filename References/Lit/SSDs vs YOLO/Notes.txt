@@ -1,0 +1,31 @@
+1 - SSD_ Single Shot MultiBox Detector _ SpringerLink
+f3309831-d28a-40e3-a744-fa788dffc893
+
+2 - You Only Look Once Unified, Real-Time Object Detection
+08f35d28-ea95-4357-ad7c-44e259f4ca24
+
+3 - Comparison of RetinaNet, SSD, and YOLO v3 for real-time pill identification
+212141bd-f3ec-4858-81c5-fb91b2789779
+
+4  - SSD vs. YOLO for Detection of Outdoor Urban Advertising Panels under Multiple Variabilities
+cd114b00-53e3-47d0-954f-55dedf7330c4
+
+
+**Figures for Reference:**
+1. From the first document, "Comparison of RetinaNet, SSD, and YOLO v3 for real-time pill identification", refer to **Fig. 6** which showcases the graph of the loss function[^1^].
+
+2. From the second document, refer to **Figure 11** which presents histo-grams of network confidence distributions for SSD and YOLOv3[^4^].
+
+ 
+**List of Acronyms:**
+- **SSD**: Single Shot MultiBox Detector
+- **YOLO**: You Only Look Once
+- **MAP**: Mean Average Precision
+- **FPS**: Frames Per Second
+
+---
+
+**References:**
+[^1^]: Lu Tan et al., "Comparison of RetinaNet, SSD, and YOLO v3 for real-time pill identification".
+[^4^]: Ángel Morera et al., "SSD vs. YOLO for Detection of Outdoor Urban Ad-vertising Panels under Multiple Variabilities".
+

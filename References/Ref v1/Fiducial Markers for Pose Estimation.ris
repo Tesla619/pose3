@@ -1,0 +1,20 @@
+TY  - JOUR
+AU  - Kalaitzakis, Michail
+AU  - Cain, Brennan
+AU  - Carroll, Sabrina
+AU  - Ambrosi, Anand
+AU  - Whitehead, Camden
+AU  - Vitzilaios, Nikolaos
+PY  - 2021
+DA  - 2021/03/26
+TI  - Fiducial Markers for Pose Estimation
+JO  - Journal of Intelligent & Robotic Systems
+SP  - 71
+VL  - 101
+IS  - 4
+AB  - Robust localization is critical for the navigation and control of mobile robots. Global Navigation Satellite Systems (GNSS), Visual-Inertial Odometry (VIO), and Simultaneous Localization and Mapping (SLAM) offer different methods for achieving this goal. In some cases however, these methods may not be available or provide high enough accuracy. In such cases, these methods may be augmented or replaced with fiducial marker pose estimation. Fiducial markers can increase the accuracy and robustness of a localization system by providing an easily recognizable feature with embedded fault detection. This paper presents an overview of fiducial markers developed in the recent years and an experimental comparison of the four markers (ARTag, AprilTag, ArUco, and STag) that represent the state-of-the-art and most widely used packages. These markers are evaluated on their accuracy, detection rate and computational cost in several scenarios that include simulated noise from shadows and motion blur. Different marker configurations, including single markers, planar and non-planar bundles and multi-sized marker bundles are also considered in this work.
+SN  - 1573-0409
+UR  - https://doi.org/10.1007/s10846-020-01307-9
+DO  - 10.1007/s10846-020-01307-9
+ID  - Kalaitzakis2021
+ER  - 
