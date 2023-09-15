@@ -4,7 +4,9 @@ close all; clear all; clc;
 Robot = initializeRobotDH();
 
 % User Input
-numbersArray = input('Enter the values for the numbersArray: ');
+% numbersArray = input('Enter the values for the numbersArray: ');
+
+numbersArray = [0,90,0,90,0,0];
 
 while true
     base_deg = numbersArray(1);   % Base
