@@ -1,0 +1,6 @@
+
+# SQUARE_LENGTH = 0.118     # A1
+# MARKER_LENGTH = 0.088     # A1
+
+SQUARE_LENGTH = 0.057       # A3
+MARKER_LENGTH = 0.043       # A3
