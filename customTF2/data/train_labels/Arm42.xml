@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>Arm42.jpg</filename>
+	<path>C:\Users\User\Desktop\Thesis\pose2\customTF2\images\Arm42.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>576</width>
+		<height>1280</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Robot</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>35</xmin>
+			<ymin>307</ymin>
+			<xmax>553</xmax>
+			<ymax>1184</ymax>
+		</bndbox>
+	</object>
+</annotation>

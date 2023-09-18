@@ -15,8 +15,13 @@ max_angle = 45 + 1
 dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_100)
 parameters = cv2.aruco.DetectorParameters_create()
 
-# Define the size of the markers (in meters)
-marker_size = 0.05
+# Define your custom dictionary of marker sizes and IDs
+marker_sizes = {}
+
+# Set the size values for the specified ID ranges
+for id_range, size in [(range(0, 4), 0.05), (range(12, 17), 0.05), (range(5, 12, 2), 0.065), (range(4, 7, 2), 0.08), (range(8, 11, 2), 0.125)]:
+    for marker_id in id_range:
+        marker_sizes[marker_id] = size
 
 # Define the camera matrix and distortion coefficients
 camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
@@ -28,7 +33,6 @@ PATH_TO_SAVED_MODEL = "customTF2/data/inference_graph/saved_model"
 category_index = label_map_util.create_category_index_from_labelmap(
     "customTF2/data/label_map.pbtxt", use_display_name=True
 )
-
 
 def send_to_matlab(variable):
     # Convert variable to a string and add the terminator
@@ -59,7 +63,7 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
 
 
 async def receive_frames():
-    async with websockets.connect("ws://100.77.189.76:8765") as websocket:
+    async with websockets.connect("ws://192.168.1.66:8765") as websocket:
         # Load the model
         print("Loading saved model ...")
         detect_fn = tf.saved_model.load(PATH_TO_SAVED_MODEL)
@@ -74,7 +78,7 @@ async def receive_frames():
 
         # Initialize video writer
         result = cv2.VideoWriter(
-            "5_Results/result.avi", cv2.VideoWriter_fourcc(*"MJPG"), 15, size
+            "Results/result.avi", cv2.VideoWriter_fourcc(*"MJPG"), 15, size
         )
 
         while True:
@@ -101,7 +105,7 @@ async def receive_frames():
             detections = detect_fn(input_tensor)
 
             # Set detection parameters
-            score_thresh = 0.4  # Minimum threshold for object detection
+            score_thresh = 0.7  # Minimum threshold for object detection was 0.4
             max_detections = 1
 
             # All outputs are batches tensors.
@@ -132,72 +136,36 @@ async def receive_frames():
             )
 
             # If markers are detected, estimate their pose
-            if ids is not None:  # and len(ids) >= 2:
-                rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(
-                    corners, marker_size, camera_matrix, distortion_coefficients
-                )
-
-                # Draw the axes of the markers
+            if ids is not None:  # and len(ids) >= 2: 
                 for i in range(len(ids)):
-                    cv2.aruco.drawDetectedMarkers(frame, corners, ids)
-                    cv2.aruco.drawAxis(
-                        frame,
-                        camera_matrix,
-                        distortion_coefficients,
-                        rvecs[i],
-                        tvecs[i],
-                        marker_size,
+                    marker_id = ids[i][0]
+                    marker_size = marker_sizes.get(marker_id, None)
+                    
+                    if marker_size is not None:
+                        rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(
+                        [corners[i]], marker_size, camera_matrix, distortion_coefficients
                     )
-
-                    if ids[i] == 255:  # FOR TESTING
-                        # Rotation matrix
-                        print(
-                            "ID",
-                            ids[i],
-                            ": Rotation Vector X: ",
-                            rvecs[i][0][0] * (180 / np.pi),
-                            "degrees",
+                        # Draw the axes of the markers
+                        cv2.aruco.drawDetectedMarkers(frame, [corners[i]], np.array([marker_id]))
+                        cv2.aruco.drawAxis(
+                            frame,
+                            camera_matrix,
+                            distortion_coefficients,
+                            rvecs[0], # was rvecs[i]
+                            tvecs[0], # was tvecs[i]
+                            marker_size,
                         )
-                        print(
-                            "ID",
-                            ids[i],
-                            ": Rotation Vector Y: ",
-                            rvecs[i][0][1] * (180 / np.pi),
-                            "degrees",
+                        
+                        cv2.putText(
+                            frame,                            
+                            f"{rvecs[0][0][0] * (180 / np.pi)}",
+                            (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.5,
+                            (0, 0, 0),
+                            1.5,
                         )
-                        print(
-                            "ID",
-                            ids[i],
-                            ": Rotation Vector Z: ",
-                            rvecs[i][0][2] * (180 / np.pi),
-                            "degrees",
-                        )
-                        print("\n\n")
-
-                        # Translation matrix
-                        print(
-                            "ID",
-                            ids[i],
-                            ": Translation Vector X: ",
-                            tvecs[i][0][0],
-                            "meters",
-                        )
-                        print(
-                            "ID",
-                            ids[i],
-                            ": Translation Vector Y: ",
-                            tvecs[i][0][1],
-                            "meters",
-                        )
-                        print(
-                            "ID",
-                            ids[i],
-                            ": Translation Vector Z: ",
-                            tvecs[i][0][2],
-                            "meters",
-                        )
-                        print("\n\n")
-
+                        
                 # Interpolate the joint movment on each marker
                 # Logic of combination of markers to determine the robot's pose
                 # Send the robot's pose to matlab via websocket
