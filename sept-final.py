@@ -158,12 +158,12 @@ async def receive_frames():
                         
                         cv2.putText(
                             frame,                            
-                            f"{rvecs[0][0][0] * (180 / np.pi)}",
+                            f"{round(rvecs[0][0][0] * (180 / np.pi), 2)}",
                             (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
                             cv2.FONT_HERSHEY_SIMPLEX,
                             0.5,
                             (0, 0, 0),
-                            1.5,
+                            2,
                         )
                         
                 # Interpolate the joint movment on each marker
