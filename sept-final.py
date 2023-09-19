@@ -18,6 +18,13 @@ parameters = cv2.aruco.DetectorParameters_create()
 # Define your custom dictionary of marker sizes and IDs
 marker_sizes = {}
 
+# Initialize variables
+window_size = 10  # Adjust the window size as needed
+current_orientation = 0.0
+previous_orientation = 0.0
+previous_orientations = [0.0] * window_size
+   
+
 # Set the size values for the specified ID ranges
 for id_range, size in [(range(0, 4), 0.05), (range(12, 17), 0.05), (range(5, 12, 2), 0.065), (range(4, 7, 2), 0.08), (range(8, 11, 2), 0.125)]:
     for marker_id in id_range:
@@ -63,6 +70,8 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
 
 
 async def receive_frames():
+    global previous_orientation
+    global previous_orientations 
     async with websockets.connect("ws://192.168.1.66:8765") as websocket:
         # Load the model
         print("Loading saved model ...")
@@ -105,7 +114,7 @@ async def receive_frames():
             detections = detect_fn(input_tensor)
 
             # Set detection parameters
-            score_thresh = 0.7  # Minimum threshold for object detection was 0.4
+            score_thresh = 0.4  # Minimum threshold for object detection was 0.4
             max_detections = 1
 
             # All outputs are batches tensors.
@@ -154,18 +163,42 @@ async def receive_frames():
                             rvecs[0], # was rvecs[i]
                             tvecs[0], # was tvecs[i]
                             marker_size,
-                        )
+                        )                       
+                        
+                        #--------------------- Calculate the orientation change ---------------------#
+                         # Estimate the current orientation angle
+                        current_orientation = rvecs[0][0][0] * (180 / np.pi)
+                        
+                        # Calculate the change in orientation
+                        orientation_change = current_orientation - previous_orientation
+
+                        # Update the previous_orientations list with the new orientation change
+                        previous_orientations.append(orientation_change)
+
+                        # Ensure the list size does not exceed the window size
+                        if len(previous_orientations) > window_size:
+                            previous_orientations.pop(0)  # Remove the oldest value
+
+                        # Calculate the new average orientation
+                        new_average_orientation = sum(previous_orientations) / len(previous_orientations)
+
+                        # Use the new average orientation as your filtered angle
+                        filtered_angle = new_average_orientation
+
+                        # Update the previous orientation for the next iteration
+                        previous_orientation = current_orientation
+                        #--------------------- Calculate the orientation change ---------------------#
                         
                         cv2.putText(
                             frame,                            
-                            f"{round(rvecs[0][0][0] * (180 / np.pi), 2)}",
+                            f"{round(filtered_angle, 2)}",
                             (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
                             cv2.FONT_HERSHEY_SIMPLEX,
                             0.5,
                             (0, 0, 0),
                             2,
                         )
-                        
+
                 # Interpolate the joint movment on each marker
                 # Logic of combination of markers to determine the robot's pose
                 # Send the robot's pose to matlab via websocket
@@ -208,7 +241,13 @@ async def receive_frames():
         c.close()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
+    # Initialize variables
+    # window_size = 10  # Adjust the window size as needed
+    # current_orientation = 0.0
+    # previous_orientation = 0.0
+    # previous_orientations = [0.0] * window_size
+    
     # create a socket object
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
