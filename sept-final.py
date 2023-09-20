@@ -34,11 +34,13 @@ for id_range, size in [(range(0, 4), 0.05), (range(12, 17), 0.05), (range(5, 12,
 camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
 distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp.txt")
 
-PATH_TO_SAVED_MODEL = "customTF2/data/inference_graph/saved_model"
+# PATH_TO_SAVED_MODEL = "customTF2/data/inference_graph/saved_model"
+PATH_TO_SAVED_MODEL = "TF_Models/20k/saved_model"
+# PATH_TO_SAVED_MODEL = "TF_Models/2k/saved_model"
 
 # Load label map and obtain class names and ids
 category_index = label_map_util.create_category_index_from_labelmap(
-    "customTF2/data/label_map.pbtxt", use_display_name=True
+    "TF_Models\label_map.pbtxt", use_display_name=True
 )
 
 def send_to_matlab(variable):
