@@ -3,7 +3,8 @@ import os
 
 def resize_images(folder_path, target_size):
     
-    output_folder = "G:\\My Drive\\customTF2\\image2"
+    #output_folder = "G:\\My Drive\\customTF2\\image2"
+    output_folder = "D:\\Photos-001\\new"
     #output_folder = folder_path    
     target_width, target_height = target_size
     
@@ -42,7 +43,8 @@ def resize_images(folder_path, target_size):
     print("Image resizing complete.")
 
 # Specify the folder containing the images
-folder_path = "G:\\My Drive\\customTF2\\images"
+#folder_path = "G:\\My Drive\\customTF2\\images"
+folder_path = "D:\\Photos-001"
 target_size = (1280, None)
 
 # Call the function to resize images

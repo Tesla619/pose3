@@ -1,0 +1,26 @@
+<annotation>
+	<folder>images</folder>
+	<filename>Arm54.jpg</filename>
+	<path>G:\My Drive\customTF2\images\Arm54.jpg</path>
+	<source>
+		<database>Unknown</database>
+	</source>
+	<size>
+		<width>1280</width>
+		<height>576</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>Robot</name>
+		<pose>Unspecified</pose>
+		<truncated>0</truncated>
+		<difficult>0</difficult>
+		<bndbox>
+			<xmin>319</xmin>
+			<ymin>126</ymin>
+			<xmax>934</xmax>
+			<ymax>519</ymax>
+		</bndbox>
+	</object>
+</annotation>

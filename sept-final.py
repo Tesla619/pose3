@@ -1,4 +1,4 @@
-import random
+import math
 import time
 import asyncio
 import websockets
@@ -19,10 +19,10 @@ parameters = cv2.aruco.DetectorParameters_create()
 marker_sizes = {}
 
 # Initialize variables
-window_size = 10  # Adjust the window size as needed
+window_size = 20  # Adjust the window size as needed
 current_orientation = 0.0
-previous_orientation = 0.0
-previous_orientations = [0.0] * window_size
+previous_angle = 0.0
+previous_angles = [0.0] * window_size
    
 
 # Set the size values for the specified ID ranges
@@ -35,8 +35,10 @@ camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
 distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp.txt")
 
 # PATH_TO_SAVED_MODEL = "customTF2/data/inference_graph/saved_model"
-PATH_TO_SAVED_MODEL = "TF_Models/20k/saved_model"
+# PATH_TO_SAVED_MODEL = "TF_Models/20k/saved_model"
 # PATH_TO_SAVED_MODEL = "TF_Models/2k/saved_model"
+# PATH_TO_SAVED_MODEL = "TF_Models/OLD/saved_model"
+PATH_TO_SAVED_MODEL = "TF_Models/2k_v2/saved_model"
 
 # Load label map and obtain class names and ids
 category_index = label_map_util.create_category_index_from_labelmap(
@@ -62,7 +64,8 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
             cv2.putText(
                 image,
                 f"{label}: {int(score*100)} %",
-                (xmin, ymin),
+                # (xmin, ymin),
+                (xmax+10, ymax-10),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 1,
                 (0, 0, 0),
@@ -72,8 +75,8 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
 
 
 async def receive_frames():
-    global previous_orientation
-    global previous_orientations 
+    global previous_angle
+    global previous_angles 
     async with websockets.connect("ws://192.168.1.66:8765") as websocket:
         # Load the model
         print("Loading saved model ...")
@@ -91,6 +94,13 @@ async def receive_frames():
         result = cv2.VideoWriter(
             "Results/result.avi", cv2.VideoWriter_fourcc(*"MJPG"), 15, size
         )
+        
+        # Initialize variables
+        numbers = []
+        counter = 0
+        
+        # Define the order of marker IDs to process
+        desired_marker_order = [0, 4, 8, 12]
 
         while True:
             # ret, frame = video_capture.read() # Make to receive from laptop webcam
@@ -148,69 +158,80 @@ async def receive_frames():
 
             # If markers are detected, estimate their pose
             if ids is not None:  # and len(ids) >= 2: 
-                for i in range(len(ids)):
-                    marker_id = ids[i][0]
-                    marker_size = marker_sizes.get(marker_id, None)
-                    
-                    if marker_size is not None:
-                        rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(
-                        [corners[i]], marker_size, camera_matrix, distortion_coefficients
-                    )
-                        # Draw the axes of the markers
-                        cv2.aruco.drawDetectedMarkers(frame, [corners[i]], np.array([marker_id]))
-                        cv2.aruco.drawAxis(
-                            frame,
-                            camera_matrix,
-                            distortion_coefficients,
-                            rvecs[0], # was rvecs[i]
-                            tvecs[0], # was tvecs[i]
-                            marker_size,
-                        )                       
-                        
-                        #--------------------- Calculate the orientation change ---------------------#
-                         # Estimate the current orientation angle
-                        current_orientation = rvecs[0][0][0] * (180 / np.pi)
-                        
-                        # Calculate the change in orientation
-                        orientation_change = current_orientation - previous_orientation
+                for desired_id in desired_marker_order:
+                    for i in range(len(ids)):
+                        marker_id = ids[i][0]
+                        marker_size = marker_sizes.get(marker_id, None)
 
-                        # Update the previous_orientations list with the new orientation change
-                        previous_orientations.append(orientation_change)
-
-                        # Ensure the list size does not exceed the window size
-                        if len(previous_orientations) > window_size:
-                            previous_orientations.pop(0)  # Remove the oldest value
-
-                        # Calculate the new average orientation
-                        new_average_orientation = sum(previous_orientations) / len(previous_orientations)
-
-                        # Use the new average orientation as your filtered angle
-                        filtered_angle = new_average_orientation
-
-                        # Update the previous orientation for the next iteration
-                        previous_orientation = current_orientation
-                        #--------------------- Calculate the orientation change ---------------------#
-                        
-                        cv2.putText(
-                            frame,                            
-                            f"{round(filtered_angle, 2)}",
-                            (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
-                            cv2.FONT_HERSHEY_SIMPLEX,
-                            0.5,
-                            (0, 0, 0),
-                            2,
+                        if marker_size is not None and marker_id == desired_id:
+                        #if marker_size is not None:
+                            rvecs, tvecs, _ = cv2.aruco.estimatePoseSingleMarkers(
+                            [corners[i]], marker_size, camera_matrix, distortion_coefficients
                         )
+                            # Draw the axes of the markers
+                            cv2.aruco.drawDetectedMarkers(frame, [corners[i]], np.array([marker_id]))
+                            cv2.aruco.drawAxis(
+                                frame,
+                                camera_matrix,
+                                distortion_coefficients,
+                                rvecs[0], # was rvecs[i]
+                                tvecs[0], # was tvecs[i]
+                                marker_size,
+                            )      
+                            
+                            # Estimate the current orientation angle
+                            angle = rvecs[0][0][0] * (180 / np.pi) - 165     
+                            buffer = angle * angle     
+                            filtered_angle = math.sqrt(buffer)
+                            
+                            if marker_id == 0 :
+                                cv2.putText(
+                                    frame,                            
+                                    f"{0}",
+                                    (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
+                                    cv2.FONT_HERSHEY_SIMPLEX,
+                                    0.5,
+                                    (0, 0, 255),
+                                    1,
+                                )                     
+                            else:                                
+                                cv2.putText(
+                                    frame,                            
+                                    f"{round(filtered_angle, 2)}",
+                                    (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
+                                    cv2.FONT_HERSHEY_SIMPLEX,
+                                    0.5,
+                                    (0, 0, 255),
+                                    1,
+                                )
 
-                # Interpolate the joint movment on each marker
-                # Logic of combination of markers to determine the robot's pose
-                # Send the robot's pose to matlab via websocket
+                            # Interpolate the joint movment on each marker
+                            # Logic of combination of markers to determine the robot's pose
+                            # Send the robot's pose to matlab via websocket
 
-                # Just to Generate movment for testing
-                numbers = random.sample(range(max_angle), 5)
-                random_res = ",".join(map(str, numbers))
-                send_to_matlab(
-                    random_res
-                )  # Send the robot's pose to matlab via websocket as one string to be parsed
+                            # Add current_orientation to the list
+                            numbers.append(int(filtered_angle))
+                            # Increment the counter
+                            counter += 1     
+
+                            # Check if we have added 4 values, then add a fixed 0 and send to MATLAB
+                            if counter == 4:
+                                numbers.append(0)
+                                send_to_matlab(numbers)  # Assuming you have a function send_to_matlab
+                                numbers = []  # Reset the list
+                                counter = 0  # Reset the counter
+
+                            # Check if there are remaining values in the list (less than 4)
+                            # if numbers:
+                            #     # Add 0 to complete the list
+                            #     while len(numbers) < 4:
+                            #         numbers.append(0)
+                            #     send_to_matlab(numbers)  # Send the remaining values to MATLAB
+
+
+                            # # Just to Generate movment for testing                    
+                            # result = ",".join(map(str, filtered_angle))
+                            # send_to_matlab(result)           # Send the robot's pose to matlab via websocket as one string to be parsed
 
             ############################## Output Overlays #########################################
 
@@ -247,8 +268,8 @@ if __name__ == "__main__":
     # Initialize variables
     # window_size = 10  # Adjust the window size as needed
     # current_orientation = 0.0
-    # previous_orientation = 0.0
-    # previous_orientations = [0.0] * window_size
+    # previous_angle = 0.0
+    # previous_angles = [0.0] * window_size
     
     # create a socket object
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)

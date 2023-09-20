@@ -24,38 +24,51 @@ while true
         % Convert the cell array to an array of numbers
         numbersArray = str2double(numbersCellArray);
 
-        base_deg = numbersArray(1);   % Base
-        shld_deg = numbersArray(2);   % Shoulder 
-        elbw_deg = numbersArray(3);   % Elbow
-        eeff_deg = numbersArray(4);   % End Effector
-        effp_deg = numbersArray(5);   % Pitch of End Effector
-        
-    catch exception
-        base_deg = 0;   % Base
-        shld_deg = 0;   % Shoulder 
-        elbw_deg = 0;   % Elbow
-        eeff_deg = 0;   % End Effector
-        effp_deg = 0;   % Pitch of End Effector    
-    end
+        base_deg = numbersArray(1)   % Base
+        shld_deg = numbersArray(2)   % Shoulder 
+        elbw_deg = numbersArray(3)   % Elbow
+        eeff_deg = numbersArray(4)   % End Effector
+        effp_deg = numbersArray(5)   % Pitch of End Effector
+
+
     %%%%%%--------------------------------------%%%%%%
 
-    % check if data is not empty
-    if ~isempty(data)   % Check about offset if needed here or in python 
-        
-        fprintf('Received data: %s\n', data);
-
-        Robot.plot([deg2rad(00 + base_deg), ...   % Base
-                    deg2rad(90 + shld_deg), ...   % Shoulder 
-                    deg2rad(00 + elbw_deg), ...   % Elbow
-                    deg2rad(90 + eeff_deg), ...   % End Effector
-                    deg2rad(00 + effp_deg)]);     % Pitch of End Effector
-    end
+        % check if data is not empty
+        if ~isempty(data)   % Check about offset if needed here or in python 
+    
+            fprintf('Received data: %s\n', data);
+    
+            Robot.plot([deg2rad(00 + base_deg), ...   % Base
+                        deg2rad(90 + shld_deg), ...   % Shoulder 
+                        deg2rad(00 + elbw_deg), ...   % Elbow
+                        deg2rad(90 + eeff_deg), ...   % End Effector
+                        deg2rad(00 + effp_deg)]);     % Pitch of End Effector
+        end
 
     % if isempty(data)
     %     fprintf('Closing Connection...');
     %     fclose(t);
     %     break;
     % end
+        
+    catch exception
+        % base_deg = 0;   % Base
+        % shld_deg = 0;   % Shoulder 
+        % elbw_deg = 0;   % Elbow
+        % eeff_deg = 0;   % End Effector
+        % effp_deg = 0;   % Pitch of End Effector   
+        % 
+        % if ~isempty(data)   % Check about offset if needed here or in python 
+        % 
+        % fprintf('Received data catch: %s\n', data);
+        % 
+        % Robot.plot([deg2rad(00 + base_deg), ...   % Base
+        %             deg2rad(90 + shld_deg), ...   % Shoulder 
+        %             deg2rad(00 + elbw_deg), ...   % Elbow
+        %             deg2rad(90 + eeff_deg), ...   % End Effector
+        %             deg2rad(00 + effp_deg)]);     % Pitch of End Effector
+        % end
+    end
 end
 
 function Robot = initializeRobotDH()
