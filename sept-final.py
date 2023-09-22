@@ -30,6 +30,8 @@ for id_range, size in [(range(0, 4), 0.05), (range(12, 17), 0.05), (range(5, 12,
     for marker_id in id_range:
         marker_sizes[marker_id] = size
 
+#print(marker_sizes)
+
 # Define the camera matrix and distortion coefficients
 camera_matrix = np.loadtxt("Calibration\\Pics\\Final\\camera_matrix_hp.txt")
 distortion_coefficients = np.loadtxt("Calibration\\Pics\\Final\\distortion_coefficients_hp.txt")
@@ -97,12 +99,16 @@ async def receive_frames():
         
         # Initialize variables
         numbers = []
+        numbers.append(int(0))
         counter = 0
+        fps_count = 0
         
         # Define the order of marker IDs to process
         desired_marker_order = [0, 4, 8, 12]
+        # desired_marker_order = [3, 7, 11, 15]
 
         while True:
+            fps_count += 1
             # ret, frame = video_capture.read() # Make to receive from laptop webcam
 
             # Receive the frame from the websocket
@@ -180,46 +186,76 @@ async def receive_frames():
                             )      
                             
                             # Estimate the current orientation angle
-                            angle = rvecs[0][0][0] * (180 / np.pi) - 165     
+                            angle = rvecs[0][0][0] * (180 / np.pi) - 167   
                             buffer = angle * angle     
                             filtered_angle = math.sqrt(buffer)
                             
-                            if marker_id == 0 :
+                            if (0 <= marker_id <= 3):
                                 cv2.putText(
                                     frame,                            
                                     f"{0}",
                                     (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
                                     cv2.FONT_HERSHEY_SIMPLEX,
-                                    0.5,
-                                    (0, 0, 255),
-                                    1,
-                                )                     
+                                    1.5,
+                                    (255, 255, 255),
+                                    2,
+                                )        
+                            # elif (4 <= marker_id <= 7):
+                            #     cv2.putText(
+                            #         frame,                            
+                            #         f"{int(filtered_angle) + 90}",
+                            #         (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
+                            #         cv2.FONT_HERSHEY_SIMPLEX,
+                            #         1.5,
+                            #         (255, 255, 255),
+                            #         2,
+                            #     )
+                            # elif (12 <= marker_id <= 17):
+                            #     cv2.putText(
+                            #         frame,                            
+                            #         f"{int(filtered_angle) + 90}",
+                            #         (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
+                            #         cv2.FONT_HERSHEY_SIMPLEX,
+                            #         1.5,
+                            #         (255, 255, 255),
+                            #         2,
+                            #     )
                             else:                                
                                 cv2.putText(
                                     frame,                            
-                                    f"{round(filtered_angle, 2)}",
+                                    #f"{round(filtered_angle, 2)}",
+                                    f"{int(filtered_angle)}",
                                     (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
                                     cv2.FONT_HERSHEY_SIMPLEX,
-                                    0.5,
-                                    (0, 0, 255),
-                                    1,
+                                    1.5,
+                                    (255, 255, 255),
+                                    2,
                                 )
 
                             # Interpolate the joint movment on each marker
                             # Logic of combination of markers to determine the robot's pose
                             # Send the robot's pose to matlab via websocket
+                            
+                            if fps_count >= 20:                                
+                                if not (0 <= marker_id <= 3):                                    
+                                    
+                                    # if (4 <= marker_id <= 7):
+                                    #     numbers.append(int(filtered_angle) + 90)
+                                    # else:
+                                    #   numbers.append(int(filtered_angle))                                        
+                                    numbers.append(int(filtered_angle))
+                                    # Increment the counter                                      
+                                    counter += 1     
 
-                            # Add current_orientation to the list
-                            numbers.append(int(filtered_angle))
-                            # Increment the counter
-                            counter += 1     
-
-                            # Check if we have added 4 values, then add a fixed 0 and send to MATLAB
-                            if counter == 4:
-                                numbers.append(0)
-                                send_to_matlab(numbers)  # Assuming you have a function send_to_matlab
-                                numbers = []  # Reset the list
-                                counter = 0  # Reset the counter
+                                # Check if we have added 4 values, then add a fixed 0 and send to MATLAB
+                                    if counter == 2:
+                                        numbers.append(0)
+                                        numbers.append(0)
+                                        send_to_matlab(numbers)  # Assuming you have a function send_to_matlab                                    
+                                        numbers = []  # Reset the list
+                                        counter = 0  # Reset the counter
+                                        numbers.append(int(0))
+                                        fps_count = 0
 
                             # Check if there are remaining values in the list (less than 4)
                             # if numbers:

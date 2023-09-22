@@ -19,16 +19,27 @@ while true
         %%%%%% Code to parse the data into sections %%%%%% 
 
         % Split the string by commas
-        numbersCellArray = strsplit(data, ',');
+        numbersCellArray = strsplit(data, ',')
+        
+        % Remove square brackets and convert to numbers
+        resultNumbers = zeros(size(numbersCellArray)); % Initialize an array to store the results
+
+        for i = 1:numel(numbersCellArray)
+            % Remove square brackets, leading/trailing spaces, and convert to a number
+            cleanedStr = strrep(numbersCellArray{i}, '[', ''); % Remove '['
+            cleanedStr = strrep(cleanedStr, ']', ''); % Remove ']'
+            cleanedStr = strtrim(cleanedStr); % Remove leading/trailing spaces
+            resultNumbers(i) = str2double(cleanedStr); % Convert to a number
+        end
 
         % Convert the cell array to an array of numbers
-        numbersArray = str2double(numbersCellArray);
+        % numbersArray = str2double(results);
 
-        base_deg = numbersArray(1)   % Base
-        shld_deg = numbersArray(2)   % Shoulder 
-        elbw_deg = numbersArray(3)   % Elbow
-        eeff_deg = numbersArray(4)   % End Effector
-        effp_deg = numbersArray(5)   % Pitch of End Effector
+        base_deg = resultNumbers(1);   % Base
+        shld_deg = resultNumbers(2);   % Shoulder 
+        elbw_deg = resultNumbers(3);   % Elbow
+        eeff_deg = resultNumbers(4);   % End Effector
+        effp_deg = resultNumbers(5);   % Pitch of End Effector
 
 
     %%%%%%--------------------------------------%%%%%%
@@ -102,7 +113,7 @@ function Robot = initializeRobotDH()
 
     % Set the joints limits
     L(1).qlim = [deg2rad(-120) deg2rad(120)];
-    L(2).qlim = [deg2rad(0) deg2rad(150)];
+    L(2).qlim = [deg2rad(0) deg2rad(180)];
     L(3).qlim = [deg2rad(-90) deg2rad(90)];
     L(4).qlim = [deg2rad(15) deg2rad(165)];
     L(5).qlim = [deg2rad(-180) deg2rad(180)];
@@ -110,4 +121,17 @@ function Robot = initializeRobotDH()
     % Compute all serial links and state the name
     Robot = SerialLink(L);
     Robot.name = 'Robot';
+end
+
+function result = replaceNaNWithZero(inputMatrix)
+    [m, n] = size(inputMatrix);
+    result = inputMatrix; % Initialize result with the input matrix
+
+    for i = 1:m
+        for j = 1:n
+            if isnan(inputMatrix(i, j))
+                result(i, j) = 0;
+            end
+        end
+    end
 end
