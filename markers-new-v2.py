@@ -84,10 +84,9 @@ def user_inputs():
         print("\nSelect an ID range type:")
         print("1. Single Range (single value)")
         print("2. Custom Range (start to end)")
-        print("3. Custom Range (inputed by user)")
-        print("4. Multiple Ranges (multiple start and end)")        
+        print("3. Custom Range (inputed by user)")   
         
-        choice = input("Enter your choice (1/2/3/4): ")
+        choice = input("Enter your choice (1/2/3): ")
         
         if choice == '1':
             try:
@@ -95,6 +94,7 @@ def user_inputs():
                 return paper_size, marker_dic, marker_size_cm, choice, value + 1
             except ValueError:
                 print("\nInvalid input! Please enter a valid integer.")
+                
         elif choice == '2':
             try:
                 start = get_valid_integer_input("\nEnter the start of the range: ")
@@ -105,25 +105,23 @@ def user_inputs():
                     print("\nInvalid range! Start should be less than or equal to end.")
             except ValueError:
                 print("\nInvalid input! Please enter valid integers for start and end.")
-        elif choice == '3':
-            #-------In progress-------
-            return paper_size, marker_dic, marker_size_cm, choice, list(range(start, end + 1))
-        elif choice == '4':
+        
+        elif choice == '3':                        
+            input_numbers = input("Enter a custom range from start to end: ").split()
+            number_values = []
+
             try:
-                num_ranges = get_valid_integer_input("\nEnter the number of ranges: ")
-                ranges = []
-                for i in range(num_ranges):
-                    start = get_valid_integer_input(f"\nEnter the start of range {i + 1}: ")
-                    end = get_valid_integer_input(f"Enter the end of range {i + 1}: ")
-                    if start <= end:
-                        ranges.append(list(range(start, end + 1)))
-                    else:
-                        print(f"\nInvalid range for range {i + 1}! Start should be less than or equal to end.")
-                return paper_size, marker_dic, marker_size_cm, choice, ranges
+                for num_str in input_numbers:
+                    num = int(num_str)
+                    number_values.append(num)
+
+                print("Selected numbers:", number_values)
+                return paper_size, marker_dic, marker_size_cm, choice, number_values
             except ValueError:
-                print("\nInvalid input! Please enter valid integers for ranges.")
+                print("Invalid input format. Please enter a sequence of numbers separated by spaces.")
+                
         else:
-            print("\nInvalid choice! Please select 1, 2, 3 or 4.")
+            print("\nInvalid choice! Please select 1, 2, or 3.")
 
 def generate_aruco_marker(marker_id, marker_dic, marker_size_cm, resolution_ppcm, image_path):
     marker_size_pixels_res = int(marker_size_cm * resolution_ppcm)
@@ -307,8 +305,5 @@ elif selected_choice == '2':
     
 elif selected_choice == '3':
     print("This is case 3")
-    
-elif selected_choice == '4':
-    print("This is case 4")
    
 print("\nAll tasks complete!\n")
