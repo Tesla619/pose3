@@ -79,7 +79,7 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
 async def receive_frames():
     global previous_angle
     global previous_angles 
-    async with websockets.connect("ws://192.168.1.66:8765") as websocket:
+    async with websockets.connect("ws://192.168.0.101:8765") as websocket:
         # Load the model
         print("Loading saved model ...")
         detect_fn = tf.saved_model.load(PATH_TO_SAVED_MODEL)
@@ -210,16 +210,17 @@ async def receive_frames():
                             #         (255, 255, 255),
                             #         2,
                             #     )
-                            # elif (12 <= marker_id <= 17):
-                            #     cv2.putText(
-                            #         frame,                            
-                            #         f"{int(filtered_angle) + 90}",
-                            #         (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
-                            #         cv2.FONT_HERSHEY_SIMPLEX,
-                            #         1.5,
-                            #         (255, 255, 255),
-                            #         2,
-                            #     )
+                            elif (12 <= marker_id <= 17):
+                                cv2.putText(
+                                    frame,                            
+                                    #f"{int(filtered_angle) + 90}",
+                                    "90",
+                                    (int(corners[i][0][0][0]), int(corners[i][0][0][1])),
+                                    cv2.FONT_HERSHEY_SIMPLEX,
+                                    1.5,
+                                    (255, 255, 255),
+                                    2,
+                                )
                             else:                                
                                 cv2.putText(
                                     frame,                            

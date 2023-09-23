@@ -9,6 +9,12 @@ fopen(t);
 % Initialize the Robot Simulation
 Robot = initializeRobotDH();
 
+Robot.plot([deg2rad(00), ...   % Base
+            deg2rad(90), ...   % Shoulder 
+            deg2rad(00), ...   % Elbow
+            deg2rad(90), ...   % End Effector
+            deg2rad(00)]);     % Pitch of End Effector
+
 % Main Loop
 while true
 
