@@ -1,6 +1,6 @@
 import os
 import cv2
-import time
+import shutil
 import math
 import numpy as np
 import cv2.aruco as aruco
@@ -98,8 +98,6 @@ def user_inputs():
                 for num_str in input_numbers:
                     num = int(num_str)
                     number_values.append(num)
-
-                print("Selected numbers:", number_values)
                 return paper_size, marker_dic, marker_size_cm, choice, list(number_values)
             except ValueError:
                 print("Invalid input format. Please enter a sequence of numbers separated by spaces.")
@@ -123,15 +121,14 @@ def generate_white_box(box_size_cm, resolution_ppcm, output_path, border_thickne
     box_image[:, -border_thickness:] = 0
     cv2.imwrite(output_path, box_image)
 
+# Might remove subfolder for sheets and just place them in Markers folder
 def generate_sheet_with_markers(printBool, box_marker_paths, start_idx, paper_width_cm, paper_height_cm, box_size_cm, resolution_ppcm, output_path, current_page, total_pages, margin_cm, marker_dic):
-    
     fontScale, thickness = 0.35, 1    
     width_pixels = int(paper_width_cm * resolution_ppcm)
     height_pixels = int(paper_height_cm * resolution_ppcm)
     
     if printBool:
-        print("\n")
-        print(f"width_pixels: {width_pixels}")
+        print(f"\nwidth_pixels: {width_pixels}")
         print(f"height_pixels: {height_pixels}")
 
     sheet_image = np.ones((height_pixels, width_pixels), dtype=np.uint8) * 255
@@ -201,7 +198,7 @@ def generate_sheet_with_markers(printBool, box_marker_paths, start_idx, paper_wi
     
     cv2.imwrite(output_path, sheet_image)
 
-    if printBool: print(f"Saved sheet with markers to: {output_path}")
+    if printBool: print(f"\nSaved sheet with markers to: {output_path}")
 
 def all_generate(marker_dic, marker_size_cm, paper_width_cm, paper_height_cm, resolution_ppcm, margin_cm, marker_num, debug = 0):  # marker_num still in progress
     
@@ -248,20 +245,29 @@ def all_generate(marker_dic, marker_size_cm, paper_width_cm, paper_height_cm, re
     sheet_count = math.ceil(len(box_marker_paths) / markers_per_sheet)
 
     if debug:
-        print("\n")
-        print(f"len(box_marker_paths): {len(box_marker_paths)}\n")
-        print(f"num_markers_horizontal: {num_markers_horizontal}\n")
-        print(f"num_markers_vertical: {num_markers_vertical}\n")
-        print(f"markers_per_sheet: {markers_per_sheet}\n")
-        print(f"sheet_count: {sheet_count}\n")
+        print(f"len(box_marker_paths): {len(box_marker_paths)}")
+        print(f"num_markers_horizontal: {num_markers_horizontal}")
+        print(f"num_markers_vertical: {num_markers_vertical}")
+        print(f"markers_per_sheet: {markers_per_sheet}")
+        print(f"sheet_count: {sheet_count}")
 
     for i in range(sheet_count):
         current_page = i + 1
         sheet_path = os.path.join(sheet_folder, f"{marker_size_cm}cm_sheet_{current_page}.png")
         start_idx = i * markers_per_sheet
         generate_sheet_with_markers(debug, box_marker_paths, start_idx, paper_width_cm, paper_height_cm, box_size_cm, resolution_ppcm, sheet_path, current_page, sheet_count, margin_cm, marker_dic)
+    
+    print("\nDeleting extra files and folders...")
         
-    # Add delete for extra files and folders
+    destination_folder = "Markers"    
+    delete_folder = os.path.join("Markers", f"{marker_size_cm}cm")    
+    final_folder = os.path.join("Markers", f"{marker_size_cm}cm sheets")
+    subfolder_name = os.path.join("Markers", f"{marker_size_cm}cm\\{marker_size_cm}cm sheets")  
+           
+    if os.path.exists(final_folder): shutil.rmtree(final_folder)
+
+    shutil.move(subfolder_name, destination_folder)
+    if os.path.exists(final_folder): shutil.rmtree(delete_folder)
 
 paper_size, marker_dic, marker_size_cm, selected_choice, selected_ids = user_inputs()
 margin_cm = 0.75
@@ -274,7 +280,12 @@ try:
 except ValueError:
     print("Invalid input! Please enter 'Yes' or 'No' (or '1' or '0').")
 
-if debug: print(f"\npaper_size: {paper_size}, marker_dic: {marker_dic}, marker_size_cm: {marker_size_cm}, selected_choice: {selected_choice}, selected_ids: {selected_ids}")
+if debug: 
+    print(f"\npaper_size: {paper_size}")
+    print(f"marker_dic: {marker_dic}") 
+    print(f"marker_size_cm: {marker_size_cm}")
+    print(f"selected_choice: {selected_choice}") 
+    print(f"selected_ids: {selected_ids}\n")
 
 all_generate(marker_dic, marker_size_cm, selected_width, selected_height, resolution_ppcm, margin_cm, selected_ids, debug)   
 print("\nAll tasks complete!\n")
