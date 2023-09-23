@@ -64,23 +64,7 @@ def user_inputs():
             marker_size_cm = get_valid_float_input("Enter the marker physical size in cm: ")
         except ValueError:
             print("Invalid input! Please enter a valid marker size in cm.")     
-        
-        #-------In progress-------        
-        # try:
-        #     num_inputs = get_valid_integer_input("Enter the number of marker physical sizes in cm to generate: ", min_value = 1)
-        # except ValueError:
-        #     print("Invalid input! Please enter a valid paper size between 0 and 4.")        
-        
-        # physical_sizes_list = []
-        # for i in range(num_inputs):
-        #     try:
-        #         user_input = get_valid_float_input(f"Enter the marker physical size in cm for input {i + 1}: ")
-        #         physical_sizes_list.append(user_input)
-        #     except ValueError:
-        #         print("Invalid input! Please enter a valid number.")
-        #         #make exit maybe
-        #-------In progress-------
-        
+                
         print("\nSelect an ID range type:")
         print("1. Single Range (single value)")
         print("2. Custom Range (start to end)")
@@ -90,8 +74,8 @@ def user_inputs():
         
         if choice == '1':
             try:
-                value = get_valid_integer_input("\nEnter a single value: ")
-                return paper_size, marker_dic, marker_size_cm, choice, value + 1
+                value = get_valid_integer_input("\nEnter the total number of IDs: ")
+                return paper_size, marker_dic, marker_size_cm, choice, list(range(value + 1)) # made list 
             except ValueError:
                 print("\nInvalid input! Please enter a valid integer.")
                 
@@ -116,7 +100,7 @@ def user_inputs():
                     number_values.append(num)
 
                 print("Selected numbers:", number_values)
-                return paper_size, marker_dic, marker_size_cm, choice, number_values
+                return paper_size, marker_dic, marker_size_cm, choice, list(number_values)
             except ValueError:
                 print("Invalid input format. Please enter a sequence of numbers separated by spaces.")
                 
@@ -236,13 +220,12 @@ def all_generate(marker_dic, marker_size_cm, paper_width_cm, paper_height_cm, re
     os.makedirs(os.path.join(base_path, "Generated_Markers"), exist_ok=True)
     os.makedirs(os.path.join(base_path, "Generated_Box_Markers"), exist_ok=True)
     generate_white_box(box_size_cm, resolution_ppcm, output_path)
-    
-    for i in range(marker_num):
-    #for i in range(len(marker_num)):
+        
+    for i in marker_num:
         marker_path = os.path.join(base_path, "Generated_Markers", f"{marker_dic}x{marker_dic}_marker_id{i}_{marker_size_cm}cm.png")
         generate_aruco_marker(i, marker_dic, marker_size_cm, resolution_ppcm, marker_path)
 
-    for i in range(marker_num):
+    for i in marker_num:
         background = cv2.imread(output_path)
         marker_path = os.path.join(base_path, "Generated_Markers", f"{marker_dic}x{marker_dic}_marker_id{i}_{marker_size_cm}cm.png")
         overlay = cv2.imread(marker_path)
@@ -256,7 +239,7 @@ def all_generate(marker_dic, marker_size_cm, paper_width_cm, paper_height_cm, re
     os.makedirs(sheet_folder, exist_ok=True)
 
     box_marker_paths = [os.path.join(base_path, "Generated_Box_Markers", f"{marker_dic}x{marker_dic}_marker_id{i}_{marker_size_cm}cm.png") 
-                        for i in range(marker_num)]
+                        for i in marker_num]
 
     # Calculate the number of markers on a single sheet
     markers_per_sheet = num_markers_horizontal * num_markers_vertical
@@ -280,30 +263,18 @@ def all_generate(marker_dic, marker_size_cm, paper_width_cm, paper_height_cm, re
         
     # Add delete for extra files and folders
 
-paper_size, marker_dic, marker_size_cm, selected_choice, selected_range = user_inputs()
+paper_size, marker_dic, marker_size_cm, selected_choice, selected_ids = user_inputs()
 margin_cm = 0.75
 paper_margin_cm = 1
 resolution_ppcm = 37.8
 selected_width, selected_height = select_paper_size(paper_size, paper_margin_cm)
 
-#---------------------------------------------
-# try:
-#     debug = get_valid_bool_input("Debug Print Yes or No (Yes = 1 or No = 0): ")
-# except ValueError:
-#     print("Invalid input! Please enter 'Yes' or 'No' (or '1' or '0').")
-#---------------------------------------------
+try:
+    debug = get_valid_bool_input("Debug Print Yes or No (Yes = 1 or No = 0): ")
+except ValueError:
+    print("Invalid input! Please enter 'Yes' or 'No' (or '1' or '0').")
 
-#if debug: print(paper_size, marker_dic, marker_size_cm, selected_choice, selected_range)
+if debug: print(f"\npaper_size: {paper_size}, marker_dic: {marker_dic}, marker_size_cm: {marker_size_cm}, selected_choice: {selected_choice}, selected_ids: {selected_ids}")
 
-print(selected_range)
-
-if selected_choice == '1':
-    all_generate(marker_dic, marker_size_cm, selected_width, selected_height, resolution_ppcm, margin_cm, selected_range)   
-    
-elif selected_choice == '2':
-    print("This is case 2")
-    
-elif selected_choice == '3':
-    print("This is case 3")
-   
+all_generate(marker_dic, marker_size_cm, selected_width, selected_height, resolution_ppcm, margin_cm, selected_ids, debug)   
 print("\nAll tasks complete!\n")
