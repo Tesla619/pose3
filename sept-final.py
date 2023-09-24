@@ -79,7 +79,8 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
 async def receive_frames():
     global previous_angle
     global previous_angles 
-    async with websockets.connect("ws://192.168.0.101:8765") as websocket:
+    #async with websockets.connect("ws://192.168.0.101:8765") as websocket:
+    async with websockets.connect("ws://192.168.1.66:8765") as websocket:
         # Load the model
         print("Loading saved model ...")
         detect_fn = tf.saved_model.load(PATH_TO_SAVED_MODEL)
@@ -104,9 +105,12 @@ async def receive_frames():
         fps_count = 0
         
         # Define the order of marker IDs to process
-        desired_marker_order = [0, 4, 8, 12]
+        # desired_marker_order = [0, 4, 8, 12]
+        # desired_marker_order = [1, 5, 9, 13]
+        # desired_marker_order = [2, 6, 10, 14]
         # desired_marker_order = [3, 7, 11, 15]
-
+        desired_marker_order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
+        
         while True:
             fps_count += 1
             # ret, frame = video_capture.read() # Make to receive from laptop webcam
