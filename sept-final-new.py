@@ -1,25 +1,10 @@
 import math
 import time
-import asyncio
-import websockets
-import socket
-# import tensorflow as tf
 import cv2
 import numpy as np
-# from object_detection.utils import label_map_util
-
-# # Load the dictionary and parameters
-# dictionary = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_100)
-# parameters = cv2.aruco.DetectorParameters_create()
 
 # Define your custom dictionary of marker sizes and IDs
-marker_sizes = {}
-
-# Initialize variables
-window_size = 20  # Adjust the window size as needed
-current_orientation = 0.0
-previous_angle = 0.0
-previous_angles = [0.0] * window_size   
+marker_sizes = {}  
 
 # Set the size values for the specified ID ranges
 for id_range, size in [(range(0, 4), 0.05), (range(12, 17), 0.05), (range(5, 12, 2), 0.065), (range(4, 7, 2), 0.08), (range(8, 11, 2), 0.125)]:
@@ -35,12 +20,8 @@ def send_to_matlab(variable):
     data = str(variable) + "\n"  # Newline character as the terminator
 
     # Send the data
-    c.send(data.encode())
+    # c.send(data.encode())
     
-# def detect_ArUco(img):
-    
-
-
 def Calculate_orientation_in_degree(Detected_ArUco_markers):
     ArUco_marker_angles = {}
     for id in Detected_ArUco_markers:        
@@ -53,21 +34,34 @@ def Calculate_orientation_in_degree(Detected_ArUco_markers):
         centre = (tl[0]+tr[0]+bl[0]+br[0])/4, -((tl[1]+tr[1]+bl[1]+br[1])/4)
         
         try:
-            angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0]))))
-        except:            
-            if(top[1]>centre[1]):
-                angle = 90
-            elif(top[1]<centre[1]):
-                angle = 270
-                
-        if(top[0] >= centre[0] and top[1] < centre[1]):
-            angle = 360 + angle
-        elif(top[0]<centre[0]):
-            angle = 180 + angle
-
-        # if (0 <= id <= 3) or (8 <= id <= 11):
-        if id == 0 or id == 8:
-            angle = angle - 90
+            if (0 <= id <= 3) or (8 <= id <= 11):   
+                angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0])))) - 90
+            else:
+                angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0]))))
+        except:     
+            if (0 <= id <= 3) or (8 <= id <= 11):       
+                if(top[1]>centre[1]):
+                    angle = 0
+                elif(top[1]<centre[1]):
+                    angle = -90
+            else:
+                if(top[1]>centre[1]):
+                    angle = 90
+                elif(top[1]<centre[1]):
+                    angle = 270        
+        
+        if not (0 <= id <= 3) or (8 <= id <= 11):               
+            if(top[0] >= centre[0] and top[1] < centre[1]):
+                angle = 360 + angle
+            elif(top[0]<centre[0]):
+                angle = 180 + angle   
+        # else:    
+            # if(top[0] >= centre[0] and top[1] < centre[1]):
+            #     # angle = 360 + angle
+            #     angle = 0 + angle # confirmed
+            # elif(top[0]<centre[0]):
+            #     angle = 0 + angle # most likely
+          
         
         ArUco_marker_angles.update({id: angle})
         
