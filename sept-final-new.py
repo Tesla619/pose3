@@ -52,34 +52,31 @@ def Calculate_orientation_in_degree(Detected_ArUco_markers):
         top = (tl[0]+tr[0])/2, -((tl[1]+tr[1])/2)
         centre = (tl[0]+tr[0]+bl[0]+br[0])/4, -((tl[1]+tr[1]+bl[1]+br[1])/4)
         
-        
         try:
             angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0]))))
-        except:
-            # add conditioning here for different ids later on
+        except:            
             if(top[1]>centre[1]):
                 angle = 90
-                print("90 HERE")
             elif(top[1]<centre[1]):
                 angle = 270
-                print("270 HERE")
+                
         if(top[0] >= centre[0] and top[1] < centre[1]):
             angle = 360 + angle
-            print("360 + HERE")
         elif(top[0]<centre[0]):
             angle = 180 + angle
-            print("180 + here HERE")
-            
-        if (0 <= id <= 3) or (8 <= id <= 11):
-            ArUco_marker_angles.update({id: angle-90})
-        else:
-            ArUco_marker_angles.update({id: angle})
-        return ArUco_marker_angles
+
+        # if (0 <= id <= 3) or (8 <= id <= 11):
+        if id == 0 or id == 8:
+            angle = angle - 90
+        
+        ArUco_marker_angles.update({id: angle})
+        
+    return ArUco_marker_angles
 
 
-def mark_ArUco(img,Detected_ArUco_markers,ArUco_marker_angles):
-    for key in Detected_ArUco_markers:
-        corners = Detected_ArUco_markers[key]
+def mark_ArUco(img, Detected_ArUco_markers,ArUco_marker_angles):
+    for id in Detected_ArUco_markers:
+        corners = Detected_ArUco_markers[id]
         tl = corners[0][0]
         tr = corners[0][1]
         br = corners[0][2]
@@ -92,8 +89,8 @@ def mark_ArUco(img,Detected_ArUco_markers,ArUco_marker_angles):
         img = cv2.circle(img,(int(br[0]),int(br[1])), 6, (100,100,255), -1)
         img = cv2.circle(img,(int(bl[0]),int(bl[1])), 6, (255,255,255), -1)
         img = cv2.circle(img,centre, 5, (0,0,255), -1)
-        img = cv2.putText(img, str(key), centre, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 200), 3, cv2.LINE_AA)
-        img = cv2.putText(img, str(ArUco_marker_angles[key]), top, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3, cv2.LINE_AA)
+        img = cv2.putText(img, str(id), centre, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 200), 3, cv2.LINE_AA)
+        img = cv2.putText(img, str(ArUco_marker_angles[id]), top, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3, cv2.LINE_AA)
     return img
 
 
