@@ -69,8 +69,12 @@ def Calculate_orientation_in_degree(Detected_ArUco_markers):
         elif(top[0]<centre[0]):
             angle = 180 + angle
             print("180 + here HERE")
-        ArUco_marker_angles.update({id: angle})
-    return ArUco_marker_angles
+            
+        if (0 <= id <= 3) or (8 <= id <= 11):
+            ArUco_marker_angles.update({id: angle-90})
+        else:
+            ArUco_marker_angles.update({id: angle})
+        return ArUco_marker_angles
 
 
 def mark_ArUco(img,Detected_ArUco_markers,ArUco_marker_angles):
