@@ -35,7 +35,7 @@ def Calculate_orientation_in_degree(Detected_ArUco_markers):
         
         try:
             if (0 <= id <= 3) or (8 <= id <= 11):   
-                angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0])))) - 90
+                angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0])))) - 90            
             else:
                 angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0]))))
         except:     
@@ -78,10 +78,10 @@ def mark_ArUco(img, Detected_ArUco_markers,ArUco_marker_angles):
         top = int((tl[0]+tr[0])//2), int((tl[1]+tr[1])//2)
         centre = int((tl[0]+tr[0]+bl[0]+br[0])//4), int((tl[1]+tr[1]+bl[1]+br[1])//4)
         img = cv2.line(img,top,centre,(255,0,0),3)
-        img = cv2.circle(img,(int(tl[0]),int(tl[1])), 6, (100,100,100), -1)
-        img = cv2.circle(img,(int(tr[0]),int(tr[1])), 6, (0,255,0), -1)
-        img = cv2.circle(img,(int(br[0]),int(br[1])), 6, (100,100,255), -1)
-        img = cv2.circle(img,(int(bl[0]),int(bl[1])), 6, (255,255,255), -1)
+        img = cv2.circle(img, (int(tl[0]),int(tl[1])), 6, (100,100,100), -1)
+        img = cv2.circle(img, (int(tr[0]),int(tr[1])), 6, (0,255,0), -1)
+        img = cv2.circle(img, (int(br[0]),int(br[1])), 6, (100,100,255), -1)
+        img = cv2.circle(img, (int(bl[0]),int(bl[1])), 6, (255,255,255), -1)
         img = cv2.circle(img,centre, 5, (0,0,255), -1)
         img = cv2.putText(img, str(id), centre, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 200), 3, cv2.LINE_AA)
         img = cv2.putText(img, str(ArUco_marker_angles[id]), top, cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3, cv2.LINE_AA)
@@ -107,20 +107,9 @@ def receive_frames():
         counter = 0
         fps_count = 0
         
-        # Define the order of marker IDs to process
-        # desired_marker_order = [0, 4, 8, 12]
-        # desired_marker_order = [1, 5, 9, 13]
-        # desired_marker_order = [2, 6, 10, 14]
-        # desired_marker_order = [3, 7, 11, 15]
-        desired_marker_order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
-        
         while True:
             fps_count += 1
             ret, frame = video_capture.read()
-            
-            ############################## NEW ArUco Detection #########################################
-            
-            
             
             Detected_ArUco_markers = {}
             aruco_dict = cv2.aruco.Dictionary_get(cv2.aruco.DICT_6X6_100)
