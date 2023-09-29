@@ -101,8 +101,8 @@ def receive_frames():
         video_capture = cv2.VideoCapture(0)
         start_time = time.time()
 
-        frame_width = 640  # int(video_capture.get(3))
-        frame_height = 480  # int(video_capture.get(4))
+        frame_width = int(video_capture.get(3))
+        frame_height = int(video_capture.get(4))
         size = (frame_width, frame_height)
 
         # Initialize video writer
