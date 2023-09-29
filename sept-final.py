@@ -79,8 +79,8 @@ def visualise_on_image(image, bboxes, labels, scores, thresh):
 async def receive_frames():
     global previous_angle
     global previous_angles 
-    #async with websockets.connect("ws://192.168.0.101:8765") as websocket:
-    async with websockets.connect("ws://192.168.1.66:8765") as websocket:
+    async with websockets.connect("ws://192.168.0.101:8765") as websocket:
+    #async with websockets.connect("ws://192.168.1.66:8765") as websocket:
         # Load the model
         print("Loading saved model ...")
         detect_fn = tf.saved_model.load(PATH_TO_SAVED_MODEL)
