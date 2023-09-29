@@ -7,7 +7,7 @@ import time
 
 def detect_ArUco(img):
     Detected_ArUco_markers = {}
-    aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_250)
+    aruco_dict = aruco.Dictionary_get(aruco.DICT_6X6_100)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     parameters = aruco.DetectorParameters_create()
     corners, ids, _ = aruco.detectMarkers(gray , aruco_dict, parameters = parameters)
