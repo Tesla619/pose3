@@ -34,12 +34,14 @@ def Calculate_orientation_in_degree(Detected_ArUco_markers):
         centre = (tl[0]+tr[0]+bl[0]+br[0])/4, -((tl[1]+tr[1]+bl[1]+br[1])/4)
         
         try:
-            if (0 <= id <= 3) or (8 <= id <= 11):   
+            # if (0 <= id <= 3) or (8 <= id <= 11):   
+            if id == 0 or id == 8:
                 angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0])))) - 90            
             else:
-                angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0]))))
+                angle = round(math.degrees(np.arctan((top[1]-centre[1])/(top[0]-centre[0])))) #+ 90
         except:     
-            if (0 <= id <= 3) or (8 <= id <= 11):       
+            # if (0 <= id <= 3) or (8 <= id <= 11):       
+            if id == 0 or id == 8:
                 if(top[1]>centre[1]):
                     angle = 0
                 elif(top[1]<centre[1]):
@@ -50,17 +52,36 @@ def Calculate_orientation_in_degree(Detected_ArUco_markers):
                 elif(top[1]<centre[1]):
                     angle = 270        
         
-        if not (0 <= id <= 3) or (8 <= id <= 11):               
+        # if not (0 <= id <= 3) or (8 <= id <= 11):               
+        #     if(top[0] >= centre[0] and top[1] < centre[1]):
+        #         print(f"{id}: angle: {angle}")
+        #         angle = 360 + angle   
+        #         print(f"{id}: new angle: {angle}")
+        #     elif(top[0]<centre[0]): # was 180 + angle
+        #         # angle = angle - 90
+        #         angle = angle * -1 
+        #         angle = angle
+        
+        if id == 4 or id == 12:               
             if(top[0] >= centre[0] and top[1] < centre[1]):
-                angle = 360 + angle
+                print(f"1. {id}: angle_O: {angle}")
+                angle = 360 + angle              
+                print(f"1. {id}: angle_C: {angle}")     
             elif(top[0]<centre[0]):
-                angle = 180 + angle   
-        # else:    
-            # if(top[0] >= centre[0] and top[1] < centre[1]):
-            #     # angle = 360 + angle
-            #     angle = 0 + angle # confirmed
-            # elif(top[0]<centre[0]):
-            #     angle = 0 + angle # most likely
+                print(f"2. {id}: angle_O: {angle}")                
+                angle = 180 + angle                         
+                print(f"2. {id}: angle_C: {angle}")
+        else:    
+            if(top[0] >= centre[0] and top[1] < centre[1]):
+                print(f"3. {id}: angle_O: {angle}")
+                # angle = 360 + angle                
+                angle = angle  + 0
+                print(f"3. {id}: angle_C: {angle}")
+            elif(top[0]<centre[0]):
+                print(f"4. {id}: angle_O: {angle}")
+                # angle = 180 + angle
+                angle = angle + 180 # most likely
+                print(f"4. {id}: angle_C: {angle}")
           
         
         ArUco_marker_angles.update({id: angle})
